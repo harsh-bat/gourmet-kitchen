@@ -1,0 +1,130 @@
+{% load static %}
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"/>
+  <title>The Gourmet Kitchen</title>
+	<link rel="stylesheet" href="{% static "bootstrap/bootstrap.min.css" %}">
+	<link rel="stylesheet" href="{% static "bootstrap/bootstrap-theme.min.css" %}">
+	<script type="text/javascript" src="{% static "bootstrap/jquery-3.3.1.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "bootstrap/bootstrap.min.js" %}"></script>
+</head>
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">The Gourmet Kitchen</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+              <li><a href="#">Meet the team</a></li>
+          </li>
+          <li><a href="#">Feedback</a></li>
+					<li><a href="#">Contact Us</a></li>
+        </ul>
+				<ul class="nav navbar-nav navbar-right">
+					{% if user.is_authenticated %}
+					<li><a href="/logout">Logout</a></li>
+					{% else %}
+					<li><a href="#" data-toggle="modal" data-target="#exampleModalCenterLogin" class="loggBut">Login</a></li>
+					<li><a href="#" data-toggle="modal" data-target="#exampleModalCenterSign" class="signnBut">Signup</a></li>
+					{% endif %}
+				</ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModalCenterLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h2 class="labelsLogin">Login</h2><br>
+					<form method="post" action="/login">
+						{% csrf_token %}
+						{% if error_message_login %}
+						<div class="form-group">
+						<label id="errorMessageLogin"><strong>{{ error_message_login }}</strong></label>
+						</div>
+						{% endif %}
+						<input id="redLinkId" name="redLink" type="hidden" value="">
+						<div class="form-group">
+							<label for="login_email" class="labelsLogin">Username / Email address:</label>
+							<input type="text" class="form-control" id="login_email" placeholder="Username / Email" name="login_email" required>
+						</div>
+						<div class="form-group">
+							<label for="login_password" class="labelsLogin">Password:</label>
+							<input type="password" class="form-control" id="login_password" placeholder="Password" name="login_password" required>
+						</div>
+						<button type="submit" class="btn btn-success btn-lg">Submit</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div> <!--  modal end -->
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModalCenterSign" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<form method="post" action="/signup">
+						{% csrf_token %}
+						<h2 class="labelsLogin">Sign Up</h2><br>
+						{% if error_message_signup %}
+						<div class="form-group">
+						<label id="errorMessageSignup"><strong>{{ error_message_signup }}</strong></label>
+						</div>
+						{% endif %}
+						<div class="form-group">
+							<label for="signup_name" class="labelsLogin">Name:</label>
+							<input type="text" class="form-control" id="signup_name" placeholder="Name" name="signup_name" required>
+						</div>
+						<div class="form-group">
+							<label for="signup_email" class="labelsLogin">Email address:</label>
+							<input type="email" class="form-control" id="signup_email" placeholder="Email" name="signup_email" required>
+						</div>
+						<div class="form-group">
+							<label for="signup_name" class="labelsLogin">Pick a username:</label>
+							<input type="text" class="form-control" id="signup_username" placeholder="Username" name="signup_username" required>
+						</div>
+						<div class="form-group">
+							<label for="signup_age" class="labelsLogin">Age:</label>
+							<input type="number" class="form-control" id="signup_age" placeholder="Age" name="signup_age" required>
+						</div>
+						<div class="form-group">
+							<label for="signup_password" class="labelsLogin">Password:</label>
+							<input type="password" class="form-control" id="signup_password" placeholder="Password" name="signup_password" required>
+						</div>
+						<div class="form-group">
+							<label class="labelsLogin">I am a </label>
+							<input type="radio" name="signup_type" value="C" style="display:inline" required><label class="labelsLogin someLabels">Chef</label>
+							<input type="radio" name="signup_type" value="U" style="display:inline" required><label class="labelsLogin someLabels">User</label>
+						</div>
+						<button type="submit" class="btn btn-success btn-lg">Submit</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div> <!--  modal end -->
+  {% block content %}
+  {% endblock %}
+	<script type="text/javascript">
+	{% if clickLogin %}
+		$(".loggBut").click()
+	{% endif %}
+	{% if clickSignup %}
+		$(".signnBut").click()
+	{% endif %}
+	</script>
+</body>

@@ -1,0 +1,31 @@
+{% extends 'kitchen/base.html' %}
+{% load static %}
+{% block content %}
+	<h1>The Gourmet Kitchen</h1>
+	<div class="row">
+		<div class="col-xs-12 col-md-4 col-sm-12 allCol">
+		</div>
+		<div class="col-xs-12 col-md-4 col-sm-6 allCol">
+			<div class="toppers topRecipe">
+				<div class="thumbnail">
+					<h2 class="headRec">Recipe of the Month</h2>
+					<img src="{% static "kitchen/cake.jpg" %}" width="100%" height="100%">
+					<h2 class="recName">[Recipe.Name]</h2>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-md-4 col-sm-6 allCol">
+			<div class="toppers topChef">
+				<div class="thumbnail">
+					<h2 class="headChef">Chef of the Month</h2>
+					<img src="{% static "kitchen/adult.jpg" %}" width="100%" height="100%">
+					<h2 class="chefName">[Chef Name]</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<link rel="stylesheet" href="{% static "kitchen/index.css" %}">
+
+	{% endblock %}
