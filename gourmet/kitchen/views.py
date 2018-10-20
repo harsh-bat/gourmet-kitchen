@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from .models import Everyone
+from .models import Everyone,Recipe,Ingredient,Rating
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -11,6 +11,7 @@ def index(request):
     return render(request, "kitchen/index.html")
 
 def loginview(request):
+    redirection = request.POST.get('redirect_url_login')
     if request.method == "POST":
         entered_email = request.POST.get('login_email')
         entered_password = request.POST.get('login_password')
@@ -19,15 +20,21 @@ def loginview(request):
         elif  User.objects.filter(email=entered_email).exists():
             entered_email = User.objects.get(email=entered_email).username
         else:
-            return render(request, "kitchen/index.html",{"clickSignup":True,"error_message_signup":"You don't have an account. You must sign up"})
+            return render(request, "kitchen/index.html",{"clickSignup":True,"error_message_signup":"You don't have an account. You must sign up","redirect_here":redirection})
         user = authenticate(username=entered_email, password=entered_password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(f'profile/{entered_email}')
+            if redirection == "" or redirection is None:
+                return HttpResponseRedirect(f'profile/{entered_email}')
+                pass
+            else:
+                return HttpResponseRedirect(redirection)
         else:
-            return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"Enter valid credentials"})
+            return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"Enter valid credentials","redirect_here":redirection})
     else:
-        return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"You must first Login"})
+        if redirection is None or redirection == "":
+            redirection='/profile/fsegsegsgsgsrgrgsgsrbrs'
+        return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"You must first Login","redirect_here":redirection})
 
 
 @login_required(login_url='/login')
@@ -70,14 +77,15 @@ def profile(request, usernameLink):
 
 def signup(request):
     if request.method=='POST':
+        redirection = request.POST.get('redirect_url_sign')
         entered_email = request.POST.get("signup_email")
         entered_username = request.POST.get("signup_username")
         entered_password = request.POST.get("signup_password")
         if User.objects.filter(email=entered_email).exists():
-            return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"You already have an account. Try logging in."})
+            return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"You already have an account. Try logging in.","redirect_here":redirection})
         else:
             if User.objects.filter(username=entered_username).exists():
-                return render(request, "kitchen/index.html",{"clickSignup":True,"error_message_signup":"Username exists. Enter another one."})
+                return render(request, "kitchen/index.html",{"clickSignup":True,"error_message_signup":"Username exists. Enter another one.","redirect_here":redirection})
             else:
                 user = User.objects.create_user(
                     username = entered_username,
@@ -93,7 +101,7 @@ def signup(request):
                 user.save()
                 every.save()
                 login(request, user)
-                return HttpResponseRedirect("/profile")
+                return HttpResponseRedirect(f"/profile/{entered_username}")
     else:
         return render(request, "kitchen/index.html",{"clickSignup":True})
 
@@ -110,9 +118,9 @@ def dpChange(request):
             person.dp.delete()
         person.dp = picUploaded
         person.save()
-        return HttpResponseRedirect("/profile")
+        return HttpResponseRedirect(f"/profile/{request.user.username}")
     else:
-        return HttpResponseRedirect("/profile")
+        return HttpResponseRedirect(f"/profile/{request.user.username}")
 
 
 @login_required(login_url='/login')
@@ -125,9 +133,9 @@ def coverChange(request):
             person.cover.delete()
         person.cover= picUploaded
         person.save()
-        return HttpResponseRedirect("/profile")
+        return HttpResponseRedirect(f"/profile/{request.user.username}")
     else:
-        return HttpResponseRedirect("/profile")
+        return HttpResponseRedirect(f"/profile/{request.user.username}")
 
 
 @login_required(login_url='/login')
@@ -142,9 +150,9 @@ def detailsChange(request):
         person.age=edited_age
         person.name=edited_name
         person.save()
-        return HttpResponseRedirect('/profile')
+        return HttpResponseRedirect(f"/profile/{request.user.username}")
     else:
-        return HttpResponseRedirect("/profile")
+        return HttpResponseRedirect(f"/profile/{request.user.username}")
 
 @login_required(login_url='/login')
 def logout_view(request):
@@ -159,31 +167,125 @@ def newRecipe(request):
 @login_required(login_url='/login')
 def acceptNewRec(request):
     if request.method == 'POST':
-        toSend = request.POST
-        ingStr = findIngVal(toSend)
-        entered_name = request.POST.get('recName')
-        entered_desc = request.POST.get('recDesc')
-        entered_cal = request.POST.get('recCal')
-        entered_dir = request.POST.get('recDir')
-        entered_hr = request.POST.get('recHr')
-        entered_min = request.POST.get('recMin')
-        entered_img = request.FILES['imgUpload']
-        return HttpResponse(ingStr)
+        logged_chef = Everyone.objects.get(id=request.user)
+        print(request.POST.get('recCategory'))
+        ingList = request.POST.get('ingAll').split('/element/')[1:]
+        recipe = Recipe.objects.create(
+            name = request.POST.get('recName'),
+            desc =  request.POST.get('recDesc'),
+            dir = request.POST.get('recDir'),
+            cal = request.POST.get('recCal'),
+            category = str(request.POST.get('recCategory')),
+            time_hr = request.POST.get('recHr'),
+            time_min = request.POST.get('recMin'),
+            chef = logged_chef,
+            rec_img = request.FILES['imgUpload'],
+        )
+        recipe.save()
+        for i in ingList:
+            ing = Ingredient.objects.create(name=i,rec=recipe)
+            ing.save()
+        return HttpResponse("Done")
     else:
         return HttpResponseRedirect("/new")
 
 
+@login_required(login_url='/login')
+def editRec(request,recNoLink):
+    logged_chef = Everyone.objects.get(id=request.user)
+    if Recipe.objects.filter(rec_id=recNoLink).exists():
+        rec = Recipe.objects.get(rec_id=recNoLink)
+        ings_obs = Ingredient.objects.filter(rec=rec)
 
-def findIngVal(vals):
-    ingStr = ""
-    for i in range(16):
-        k=str((i+1))
-        keyVal = "ing"+k
-        a="0"
+        ings=list()
+        for i in ings_obs:
+            ings.append(i.name)
+        if logged_chef == rec.chef:
+            context = {
+            "rec_name" : rec.name,
+            "rec_desc": rec.desc,
+            "rec_category" : rec.category,
+            "rec_dir" : rec.dir,
+            "rec_cal": rec.cal,
+            "rec_time_hr" : rec.time_hr,
+            "rec_time_min" : rec.time_min,
+            "rec_img":rec.rec_img,
+            "ings":ings,
+            "MEDIA_URL":MEDIA_URL,
+            "rec_no":recNoLink,
+            }
+            return render(request,"kitchen/edit_rec.html", context)
+        else:
+            return render(request, "kitchen/edit_rec.html",{"is_wrong":True,"error_message":"You are trying to edit someone else's recipe"})
+    else:
+        return render(request, "kitchen/edit_rec.html",{"is_wrong":True,"error_message":"Opps!! Recipe Doesn't exists "})
+
+
+@login_required(login_url='/login')
+def acceptEditRec(request):
+    if request.method == 'POST':
+        ingList = request.POST.get('ingAll').split('/element/')[1:]
+        current_rec = Recipe.objects.get(rec_id=request.POST.get('recNo'))
+        current_rec.name = request.POST.get('recName')
+        current_rec.desc =  request.POST.get('recDesc')
+        current_rec.dir = request.POST.get('recDir')
+        current_rec.cal = request.POST.get('recCal')
+        current_rec.category = str(request.POST.get('recCategory'))
+        current_rec.time_hr = request.POST.get('recHr')
+        current_rec.time_min = request.POST.get('recMin')
         try:
-            if str(vals.get(keyVal))=="on":
-                a="1"
+            xyz = request.FILES['imgUpload']
+            if xyz is None:
+                pass
+            else:
+                if xyz=="":
+                    pass
+                else:
+                    if current_rec.rec_img:
+                        current_rec.rec_img.delete()
+                        current_rec.rec_img = xyz
         except:
-            a="0"
-        ingStr = ingStr + a
-    return ingStr
+            pass
+        current_rec.save()
+        old_ings = Ingredient.objects.filter(rec=current_rec)
+        for i in old_ings:
+            i.delete()
+        for i in ingList:
+            ing = Ingredient.objects.create(name=i,rec=current_rec)
+            ing.save()
+        return HttpResponse("Done")
+    else:
+        return HttpResponseRedirect("/new")
+
+
+def recipe(request, recNoLink):
+    if request.user.is_authenticated:
+        if Recipe.objects.filter(rec_id=recNoLink).exists():
+            current_person = Everyone.objects.get(id=request.user)
+            rec = Recipe.objects.get(rec_id=recNoLink)
+            ings_obs = Ingredient.objects.filter(rec=rec)
+            ings=list()
+            for i in ings_obs:
+                ings.append(i.name)
+            context = {
+            "rec_name" : rec.name,
+            "rec_desc": rec.desc,
+            "rec_category" : rec.category,
+            "rec_dir" : rec.dir.split('\n'),
+            "rec_cal": rec.cal,
+            "rec_time_hr" : rec.time_hr,
+            "rec_time_min" : rec.time_min,
+            "rec_img":rec.rec_img,
+            "ings":ings,
+            "MEDIA_URL":MEDIA_URL,
+            "rec_no":recNoLink,
+            }
+            if rec.chef == current_person :
+                context['allow_edit']=True
+            elif current_person.type == 'U':
+                context['allow_rating']=True
+            return render(request, 'kitchen/disp_recipe.html', context)
+        else:
+            return render(request, 'kitchen/disp_recipe.html', {'no_exist':True})
+    else:
+        return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"You must first Login","redirect_here":f"recipe/{recNoLink}"})

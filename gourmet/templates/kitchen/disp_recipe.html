@@ -1,0 +1,133 @@
+{% extends 'kitchen/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+
+	<style media="screen">
+		#headImage{
+			background: url("{{MEDIA_URL}}{{rec_img}}") no-repeat 50% 50%;
+		}
+	</style>
+	<link rel="stylesheet" href="{% static "kitchen/disp_recipe.css" %}">
+		<div class="row mainCard center-block">
+			{% if no_exist %}
+			<h1 class="recipe-card__heading">Oops!! Recipe does'nt exist</h1>
+			</div>
+			{% else %}
+			<div class="col-sm-12" id="colnId">
+				<div id="headImage"></div>
+				<div id="beneathId">
+
+					<h1 class="recipe-card__heading">{{ rec_name }}
+						{% if allow_edit %}
+						<div class="btn btn-edit" onclick="location.href='/edit/{{rec_no}}'">Edit</div>
+						{% endif %}
+					</h1>
+					<h2 class="recipe-card__subhead">{{ rec_Desc }} </h2>
+					<ul class="media">
+						<li><i id="cl" class="fa fa-clock-o"></i> {{ rec_time_hr }}hr {{ rec_time_min }}mins</li>
+						<li><i id="lf" class="fa fa-leaf"></i> {{ rec_cal }} Calories</li>
+						{% if allow_rating %}
+						<li><a>
+							<span>Rating: </span>
+							<strong>
+								<span class="fa fa-star star1"></span>
+								<span class="fa fa-star star2"></span>
+								<span class="fa fa-star star3"></span>
+								<span class="fa fa-star star4"></span>
+								<span class="fa fa-star star5"></span>
+							</strong>
+						</a>
+					</li>
+					{% endif %}
+				</ul>
+				<ul class="tabs">
+					<li class="active" rel="tab1">Ingredients</li>
+					<label for="tab1"></label>
+					<li rel="tab2">Directions</li>
+					<label for="tab2"></label>
+				</ul>
+
+				<div class="tab_container">
+					<h3 class="d_active tab_drawer_heading" rel="tab1">Ingredients</h3>
+					<div id="tab1" class="tab_content">
+						<h4>Ingredients</h4>
+						<section>
+							<ul class='ingredient-list'>
+								{% for ing in ings %}
+								<li>{{ing}}</li>
+								{% endfor %}
+							</ul>
+						</section>
+					</div>
+
+					<h3 class="tab_drawer_heading" rel="tab2">Directions</h3>
+					<div id="tab2" class="tab_content">
+						<h4>Directions</h4>
+						<section>
+							{% for dir in rec_dir %}
+							<p>dir</p>
+							{% endfor %}
+						</section>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<script>
+			$(".tab_content").hide();
+			$(".tab_content:first").show();
+
+			/* if in tab mode */
+			$("ul.tabs li").click(function() {
+
+				$(".tab_content").hide();
+				var activeTab = $(this).attr("rel");
+				$("#"+activeTab).fadeIn();
+
+				$("ul.tabs li").removeClass("active");
+				$(this).addClass("active");
+
+				$(".tab_drawer_heading").removeClass("d_active");
+				$(".tab_drawer_heading[rel^='"+activeTab+"']").addClass("d_active");
+
+			});
+			/* if in drawer mode */
+			$(".tab_drawer_heading").click(function() {
+
+				$(".tab_content").hide();
+				var d_activeTab = $(this).attr("rel");
+				$("#"+d_activeTab).fadeIn();
+
+				$(".tab_drawer_heading").removeClass("d_active");
+				$(this).addClass("d_active");
+
+				$("ul.tabs li").removeClass("active");
+				$("ul.tabs li[rel^='"+d_activeTab+"']").addClass("active");
+			});
+	   $('ul.tabs li').last().addClass("tab_last");
+
+	</script>
+
+
+	<script>
+		var rating =4;
+		switch(rating) {
+			case 5:
+			$("li a .star5").addClass('checkedStar');
+			case 4:
+			$(".star4").addClass('checkedStar');
+			case 3:
+			$(".star3").addClass('checkedStar');
+			case 2:
+			$(".star2").addClass('checkedStar');
+			case 1:
+			$(".star1").addClass('checkedStar');
+		}
+	</script>
+
+
+{% endif %}
+
+ {% endblock %}

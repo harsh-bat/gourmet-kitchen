@@ -1,12 +1,9 @@
 @import url(https://fonts.googleapis.com/css?family=Quicksand:300,400|Lato:400,300|Coda|Open+Sans);
 body {
   font-family: "Open sans", sans-serif;
-background: #159957;  /* fallback for old browsers */
 width: 100vw;
 height: 100vh;
 overflow-x: hidden;
-background: -webkit-linear-gradient(to right, #155799, #159957);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #155799, #159957); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 background-repeat: no-repeat;
 }
 

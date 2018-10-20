@@ -3,9 +3,9 @@
 body {
   font-family: "Open sans", sans-serif;
   overflow-x:hidden;
-  background: #159957;
-  background: -webkit-linear-gradient(to right, #155799, #159957);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #155799, #159957); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  /* background: #159957;
+  background: -webkit-linear-gradient(to right, #155799, #159957);
+  background: linear-gradient(to right, #155799, #159957); */
   background-repeat: repeat-y;
   width: 100vw;
   height: 100vh;
@@ -154,15 +154,6 @@ a {
  .details {
   font-size:1.4em;
   font-family:"Open sans", sans-serif;
-}
-
-
-.modal-body{
-  background: rgba(168, 243, 255, 0.75);
-}
-.modal-backdrop
-{
-    opacity:0.8 !important;
 }
 
 @media screen and (min-width : 0px) and (max-width : 767px){

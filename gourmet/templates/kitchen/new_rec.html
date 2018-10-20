@@ -14,10 +14,25 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<label for="recCategory" class="col-sm-2 control-label">Category:</label>
+					<div class="col-sm-10">
+						<select class="form-control" name="recCategory" id="recCategory" required>
+							<option selected disabled>Select</option>
+							<option value="Indian">Indian</option>
+							<option value="Chinese">Chinese</option>
+							<option value="Italian">Italian</option>
+							<option value="Mexican">Mexican</option>
+							<option value="Thai">Thai</option>
+							<option value="Other">Other</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
 					<label for="recDesc" class="col-sm-2 control-label">Description:</label>
 					<div class="col-sm-10">
 						<input type="text" class="form-control" id="recDesc" placeholder="Short Description" required name="recDesc">
 					</div>
+
 				</div>
 				<div class="form-group">
 					<label for="recCal" class="col-sm-2 control-label">Calories:</label>
@@ -35,75 +50,13 @@
 					<label class="col-sm-2 control-label">Ingredients:</label>
 					<div class="col-sm-offset-2">
 						<ul class="checkbox-grid">
-							<li class="checkbox">
-								<input type="checkbox" name="ing1"/>
-								<label for="ing1">Bread</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing2"/>
-								<label for="ing2">Broccoli</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing3"/>
-								<label for="ing3">Butter</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing4"/>
-								<label for="ing4">Cheese</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing5"/>
-								<label for="ing5">Cooking Oil</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing6"/>
-								<label for="ing6">Eggs</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing7"/>
-								<label for="ing7">Fresh Herbs</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing8"/>
-								<label for="ing8">Meat / Fish</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing9"/>
-								<label for="ing9">Milk</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing10"/>
-								<label for="ing10">Onions</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing11"/>
-								<label for="ing11">Oranges</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing12"/>
-								<label for="ing12">Pears</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing13"/>
-								<label for="ing13">Salt & Spices</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing14"/>
-								<label for="ing14">Sugar</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing15"/>
-								<label for="ing15">Sweet Potatoes</label>
-							</li>
-							<li class="checkbox">
-								<input type="checkbox" name="ing16"/>
-								<label for="ing16">Other</label>
-							</li>
+							<!-- Here -->
 						</ul>
 					</div>
 				</div>
+				<input type="hidden" id="ingAll" value="" name="ingAll">
 				<div class="form-group">
-					<label for="other" class="col-sm-2 control-label">Other:</label>
+					<label for="other" class="col-sm-2 control-label">New Ingredient:</label>
 					<div class="col-sm-10">
 						<input type="text" class="form-control time-sd" id="other">
 					</div>
@@ -126,7 +79,7 @@
 				</div>
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
-						<button type="submit" class="btn btn-success">Submit</button>
+						<button type="submit" id="submitButton" class="btn btn-success">Submit</button>
 					</div>
 				</div>
 			</form>
@@ -162,7 +115,7 @@
 				var toadd = $('#other').val();
 				if(toadd==""){}
 				else{
-				var pt1 = '<li class="checkbox"><input type="checkbox" id="'
+				var pt1 = '<li class="checkbox"><input type="checkbox" class="newOnes" id="'
 				var pt2='"/><label for="ing13">'
 				var pt3 = '</label></li>'
 				$('.checkbox-grid').append(pt1+toadd+pt2+toadd+pt3);
@@ -171,6 +124,20 @@
 				$(newId).prop("checked",true);
 			}
   		}
+
+});
+
+$('#submitButton').click(function(e){
+	var allNew = $('.newOnes');
+	var finalIng = "";
+	for(i=0;i<allNew.length;i++){
+		if(allNew[i].checked == true){
+			console.log(allNew[i].id);
+			finalIng+="/element/"+allNew[i].id;
+		}
+	}
+	console.log(finalIng);
+	$('#ingAll').attr('value',finalIng);
 });
 	</script>
 {% endblock %}

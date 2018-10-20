@@ -18,13 +18,23 @@ class Everyone(models.Model):
 
 class Recipe(models.Model):
     def user_directory_path_rec(instance, filename):
-        return 'kitchen/{0}/{1}'.format('rec', str(instance.rec_id+str(time.time())))
+        return 'kitchen/{0}/{1}'.format('rec', str(str(instance.rec_id)+str(time.time())))
     rec_id = models.AutoField(primary_key=True)
     name= models.CharField(max_length=100)
     desc = models.CharField(max_length=200)
+    category = models.CharField(max_length=100,null=True)
     dir = models.CharField(max_length=10000)
     cal = models.IntegerField(default=0)
     time_hr = models.IntegerField(default=0)
     time_min = models.IntegerField(default=0)
     rec_img = models.FileField(upload_to=user_directory_path_rec,null=True, storage=OverwriteStorage())
-    ingredients = models.CharField(max_length=16)
+    chef = models.ForeignKey(Everyone, on_delete=models.CASCADE,null=True)
+
+class Ingredient(models.Model):
+    name= models.CharField(max_length=100)
+    rec = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+
+class Rating(models.Model):
+    rec = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(Everyone, on_delete=models.CASCADE, null=True)
+    val = models.IntegerField(null=True, default=0)

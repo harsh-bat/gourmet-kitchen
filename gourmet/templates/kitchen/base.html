@@ -3,6 +3,7 @@
 <head>
 	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"/>
   <title>The Gourmet Kitchen</title>
+	<link rel="stylesheet" href="{% static "kitchen/base.css" %}">
 	<link rel="stylesheet" href="{% static "bootstrap/bootstrap.min.css" %}">
 	<link rel="stylesheet" href="{% static "bootstrap/bootstrap-theme.min.css" %}">
 	<script type="text/javascript" src="{% static "bootstrap/jquery-3.3.1.min.js" %}"></script>
@@ -56,6 +57,7 @@
 						<label id="errorMessageLogin"><strong>{{ error_message_login }}</strong></label>
 						</div>
 						{% endif %}
+						<input type="hidden" name="redirect_url_login" value="{{redirect_here}}">
 						<input id="redLinkId" name="redLink" type="hidden" value="">
 						<div class="form-group">
 							<label for="login_email" class="labelsLogin">Username / Email address:</label>
@@ -86,6 +88,7 @@
 						<label id="errorMessageSignup"><strong>{{ error_message_signup }}</strong></label>
 						</div>
 						{% endif %}
+						<input type="hidden" name="redirect_url_sign" value="{{redirect_here}}">
 						<div class="form-group">
 							<label for="signup_name" class="labelsLogin">Name:</label>
 							<input type="text" class="form-control" id="signup_name" placeholder="Name" name="signup_name" required>
@@ -126,5 +129,6 @@
 	{% if clickSignup %}
 		$(".signnBut").click()
 	{% endif %}
+
 	</script>
 </body>
