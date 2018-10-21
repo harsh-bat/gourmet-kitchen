@@ -86,6 +86,17 @@ def profile(request, usernameLink):
             context['recs'] = list()
         return render(request, "kitchen/profile_chef.html",context)
     else:
+        if Rating.objects.filter(user=person,sav=True).exists():
+            rec_objs = list()
+            rats =  Rating.objects.filter(user=person,sav=True)
+            for i in rats:
+                rec_objs.append(i.rec)
+            rec_names, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
+            context['recs']=zip(rec_names, rec_hrs, rec_mins, rec_urls, rec_imgs)
+            context['recNo'] = len(rec_names)
+        else:
+            context['recNo'] = 0
+            context['recs'] = list()
         return render(request, "kitchen/profile_user.html", context)
 
 

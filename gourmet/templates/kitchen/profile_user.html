@@ -15,10 +15,11 @@
 		{% else %}
 		<img class="avatar" src="{% static "kitchen/default_dp.png" %}" data-toggle="modal" data-target="#dpModal">
 		{% endif %}
-
   </div>
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Edit Profile</button>
 
+  {% if is_self %}
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Edit Profile</button>
+{% endif %}
   <div class="user-profile-data">
     <h1>{{ user_name }}</h1>
     <p>User</p>
@@ -28,12 +29,34 @@
   <div class="description-profile">About Me: {{user_about}}</div>
 		{% endif %}
   <ul class="data-user">
-    <li><a><strong>50</strong><span>Recipes</span></a></a></li>
+    <li><a><strong>{{ recNo }}</strong><span>Saved Recipes</span></a></a></li>
   </ul>
 </div>
 </div>
 
 <button type="button" class="btn" id="searchButton" data-toggle="modal" data-target="#mod2" >Search Recipe</button>
+
+<div class="row">
+  {% for rec_name, rec_hr, rec_min, rec_url, rec_img in recs %}
+  <div class="col-xs-12 col-md-4 col-sm-6">
+    <div class="card">
+      <div class="image" onclick="location.href='{{rec_url}}'"><img src="{{MEDIA_URL}}{{rec_img}}" width=100% height="auto" class="image2 img-rounded"></div>
+      <div class="description">
+        <div>
+          <h5 class="sub">Recipe Name</h5>
+          <h4>{{ rec_name }}</h4>
+        </div>
+        <div class="timeDiv">
+          <h5 class="sub">Time</h5>
+          <h4>{{rec_hr}}h {{rec_min}}m</h4>
+        </div>
+      </div>
+  </div>
+</div>
+{% endfor %}
+</div>
+
+{% if is_self %}
 <!-- Edit Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -121,6 +144,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- Modal for search -->
 <div class="modal fade" id="mod2" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
@@ -212,7 +236,7 @@
     </div>
   </div>
 </div>
-
+{% endif %}
 
 
 

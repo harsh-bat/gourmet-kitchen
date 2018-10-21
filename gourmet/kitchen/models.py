@@ -15,6 +15,8 @@ class Everyone(models.Model):
     dp = models.FileField(upload_to=user_directory_path_dp,null=True, storage=OverwriteStorage())
     cover = models.FileField(upload_to=user_directory_path_cover,null=True, storage=OverwriteStorage())
     type = models.CharField(max_length=1)
+    def __str__(this):
+        return str(this.name)
 
 class Recipe(models.Model):
     def user_directory_path_rec(instance, filename):
@@ -29,13 +31,19 @@ class Recipe(models.Model):
     time_min = models.IntegerField(default=0)
     rec_img = models.FileField(upload_to=user_directory_path_rec,null=True, storage=OverwriteStorage())
     chef = models.ForeignKey(Everyone, on_delete=models.CASCADE,null=True)
+    def __str__(this):
+        return str(this.name)
 
 class Ingredient(models.Model):
     name= models.CharField(max_length=100)
     rec = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    def __str__(this):
+        return str(this.rec.name+"-"+this.name)
 
 class Rating(models.Model):
     rec = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(Everyone, on_delete=models.CASCADE, null=True)
     val = models.IntegerField(null=True, default=0)
     sav = models.BooleanField(default=False)
+    def __str__(this):
+        return str(this.rec.name+"-"+this.user.name+"-"+str(this.val)+"-"+str(this.sav))
