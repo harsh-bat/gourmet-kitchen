@@ -37,6 +37,17 @@ def loginview(request):
         return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"You must first Login","redirect_here":redirection})
 
 
+def findAllAboutRecs(rec_objs):
+    rec_names, rec_hrs, rec_mins, rec_urls, rec_imgs = list(),list(),list(),list(), list()
+    for i in rec_objs:
+        rec_names.append(i.name)
+        rec_hrs.append(i.time_hr)
+        rec_mins.append(i.time_min)
+        rec_urls.append(f"/recipe/{i.rec_id}")
+        rec_imgs.append(i.rec_img)
+    return (rec_names, rec_hrs, rec_mins, rec_urls, rec_imgs)
+
+
 @login_required(login_url='/login')
 def profile(request, usernameLink):
     current_user = request.user
@@ -65,11 +76,14 @@ def profile(request, usernameLink):
     'is_self':is_self,
     'MEDIA_URL':MEDIA_URL}
     if person.type == 'C':
-        rec_names=['rec1_name', 'rec2_name', 'rec3_name', 'rec4_name', 'rec5_name']
-        rec_hrs = [2,4,12,3,5,6]
-        rec_mins = [43,21,35,61,78]
-        context['recs']=zip(rec_names, rec_hrs, rec_mins)
-        context['recNo'] = len(rec_names)
+        if Recipe.objects.filter(chef=person).exists():
+            rec_objs = Recipe.objects.filter(chef=person)
+            rec_names, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
+            context['recs']=zip(rec_names, rec_hrs, rec_mins, rec_urls, rec_imgs)
+            context['recNo'] = len(rec_names)
+        else:
+            context['recNo'] = 0
+            context['recs'] = list()
         return render(request, "kitchen/profile_chef.html",context)
     else:
         return render(request, "kitchen/profile_user.html", context)
@@ -185,7 +199,7 @@ def acceptNewRec(request):
         for i in ingList:
             ing = Ingredient.objects.create(name=i,rec=recipe)
             ing.save()
-        return HttpResponse("Done")
+        return HttpResponseRedirect(f"/recipe/{recipe.rec_id}")
     else:
         return HttpResponseRedirect("/new")
 
@@ -196,7 +210,6 @@ def editRec(request,recNoLink):
     if Recipe.objects.filter(rec_id=recNoLink).exists():
         rec = Recipe.objects.get(rec_id=recNoLink)
         ings_obs = Ingredient.objects.filter(rec=rec)
-
         ings=list()
         for i in ings_obs:
             ings.append(i.name)
@@ -253,7 +266,7 @@ def acceptEditRec(request):
         for i in ingList:
             ing = Ingredient.objects.create(name=i,rec=current_rec)
             ing.save()
-        return HttpResponse("Done")
+        return HttpResponseRedirect(f"/recipe/{current_rec.rec_id}")
     else:
         return HttpResponseRedirect("/new")
 
@@ -279,6 +292,8 @@ def recipe(request, recNoLink):
             "ings":ings,
             "MEDIA_URL":MEDIA_URL,
             "rec_no":recNoLink,
+            "chef_name":rec.chef.name,
+            "chef_url":f"/profile/{rec.chef.id.username}",
             }
             if rec.chef == current_person :
                 context['allow_edit']=True

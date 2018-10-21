@@ -25,6 +25,9 @@
 					</h1>
 					<h2 class="recipe-card__subhead">{{ rec_Desc }} </h2>
 					<ul class="media">
+						<li>
+							<a href="{{chef_url}}">{{ chef_name }}</a>
+						</li><br><br>
 						<li><i id="cl" class="fa fa-clock-o"></i> {{ rec_time_hr }}hr {{ rec_time_min }}mins</li>
 						<li><i id="lf" class="fa fa-leaf"></i> {{ rec_cal }} Calories</li>
 						{% if allow_rating %}

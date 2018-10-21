@@ -40,10 +40,10 @@
 
 
     <div class="row">
-			{% for rec_name, rec_hr, rec_min in recs %}
+			{% for rec_name, rec_hr, rec_min, rec_url, rec_img in recs %}
       <div class="col-xs-12 col-md-4 col-sm-6">
         <div class="card">
-          <div class="image"><img src="{% static "kitchen/cake.jpg" %}" width=100% height="auto" class="image2 img-rounded"></div>
+          <div class="image" onclick="location.href='{{rec_url}}'"><img src="{{MEDIA_URL}}{{rec_img}}" width=100% height="auto" class="image2 img-rounded"></div>
           <div class="description">
             <div>
               <h5 class="sub">Recipe Name</h5>

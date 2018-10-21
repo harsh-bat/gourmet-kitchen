@@ -38,3 +38,4 @@ class Rating(models.Model):
     rec = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(Everyone, on_delete=models.CASCADE, null=True)
     val = models.IntegerField(null=True, default=0)
+    sav = models.BooleanField(default=False)
