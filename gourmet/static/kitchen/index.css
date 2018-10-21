@@ -1,7 +1,7 @@
 body {
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  /* background: #FFF; */
+  background: #FFF;
 }
 
 header {
@@ -74,25 +74,75 @@ section .row img {
 
 .btn-secondary {
   background-color: #E8DFE0;
-  color: #ffffff;
+  color: #f44242;
   margin: 0 0 30px;
+   font-weight: bold;
+
 }
 
-footer {
-  font-size: 12px;
-  padding: 20px 0;
+
+/* Catalog */
+
+.rolldown-list {
+  text-align: center;
+  padding: 0;
+  margin: 0;
 }
 
-footer .col-sm-8 {
-  display: flex;
-  justify-content: flex-end;
-}
-
-footer ul {
+.rolldown-list li {
+  padding: 1em;
+  margin-bottom: .125em;
+  display: block;
   list-style: none;
+  text-transform: uppercase;
+      font-weight: bold;
+
 }
 
-footer li img {
-  width: 32px;
-  height: 32px;
+.rolldown-list li a {
+  text-decoration: none;
+}
+
+.rolldown-list li {
+  visibility: hidden;
+  animation: rolldown .7s 1;
+  transform-origin: 50% 0;
+  animation-fill-mode: forwards;
+}
+
+.rolldown-list li:nth-child(2n) {
+  background-color: #a8a7a6;
+}
+.rolldown-list li:nth-child(2n) a {
+  color: black;
+}
+.rolldown-list li:nth-child(2n+1) {
+  background-color: #5b5956;
+}
+.rolldown-list li:nth-child(2n+1) a {
+  color: white;
+}
+
+
+#myList {
+  position: absolute;
+  width: 50%;
+  left: 50%;
+  margin-left: -25%;
+}
+
+
+@keyframes rolldown {
+  0% {
+    visibility: visible;
+    transform: rotateX(180deg) perspective(500px);
+  }
+  70% {
+    visibility: visible;
+    transform: rotateX(-20deg);
+  }
+  100% {
+    visibility: visible;
+    transform: rotateX(0deg);
+  }
 }

@@ -1,21 +1,21 @@
 {% extends 'kitchen/base.html' %}
 {% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static "kitchen/index.css" %}">
+<style type="text/css">
+  .jumbotron{
+    background-image: url('{% static "kitchen/back.png" %}');
+  }
+</style>
   <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,700' rel='stylesheet' type='text/css'>
   <section class="jumbotron">
     <div class="container">
       <div class="row text-center">
         <h2>The Gourmet Kitchen</h2>
         <h3>Your one stop culinary destination to learn<br>how to whip up recipes like a chef!</h3>
-       <!--  <a class="btn btn-secondary btn-lg" href="#" role="button">See All</a> -->
       </div>
     </div>
   </section>
-  <style type="text/css">
-  	.jumbotron{
-  		background-image: url('{% static "kitchen/back.png" %}');
-  	}
-  </style>
   <section class="container text-center">
     <h2>Top Rated Recipes</h2><br>
     <div class="row">
@@ -46,26 +46,28 @@
         <div class="row text-center">
       <a class="btn btn-secondary" href="#" data-toggle="modal" data-target="#exampleModalCenterCatalogue">View Complete Catalogue</a>
     </div>
-
-    <div class="modal fade" id="exampleModalCenterCatalogue" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-body">
-					<div>
-						<ul>
-							<button type="button">Indian</button>
-							<li>Chinese</li>
-							<li>Italian</li>
-							<li>Mexican</li>
-							<li>Thai</li>
-							<li>Other</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div> <!--  modal end -->
-    </div>
   </section>
-  <link rel="stylesheet" href="{% static "kitchen/index.css" %}">
+  <div class="modal fade" id="exampleModalCenterCatalogue" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  	   <div>
+  			<ul class="rolldown-list" id="myList">
+    				<li><a href="category/indian">Indian</a></li>
+    				<li><a href="category/italian">Italian</a></li>
+    				<li><a href="category/chinese">Chinese</a></li>
+    				<li><a href="category/thai">Thai</a></li>
+    				<li><a href="category/mexican">Mexican</a></li>
+    				<li><a href="category/other">Other</a></li>
+  			</ul>
+  		</div>
+      </div>
+
+  <script type="text/javascript">
+$('.rolldown-list li').each(function () {
+var delay = ($(this).index() / 4) + 's';
+$(this).css({
+  webkitAnimationDelay: delay,
+  mozAnimationDelay: delay,
+  animationDelay: delay
+});
+});
+</script>
  {% endblock %}

@@ -22,6 +22,13 @@
 						{% if allow_edit %}
 						<div class="btn btn-edit" onclick="location.href='/edit/{{rec_no}}'">Edit</div>
 						{% endif %}
+						{% if allow_rating %}
+						{% if is_saved %}
+							<div class="btn btn-edit" id="saveButton">Saved</div>
+						{% else %}
+							<div class="btn btn-edit" id="saveButton">Save</div>
+						{% endif %}
+						{% endif %}
 					</h1>
 					<h2 class="recipe-card__subhead">{{ rec_Desc }} </h2>
 					<ul class="media">
@@ -69,7 +76,7 @@
 						<h4>Directions</h4>
 						<section>
 							{% for dir in rec_dir %}
-							<p>dir</p>
+							<p>{{ dir }}</p>
 							{% endfor %}
 						</section>
 					</div>
@@ -130,6 +137,45 @@
 		}
 	</script>
 
+	{% if allow_rating %}
+	<script type="text/javascript">
+	{% if is_saved %}
+		var isSave = true;
+	{% else %}
+		var isSave = false;
+	{% endif %}
+		$('#saveButton').click(function(){
+			var msg=""
+			if (isSave==true){
+				msg="remove"
+			}
+			else{
+				msg="add"
+			}
+			$.ajax(
+				{
+        	type:"POST",
+        	url: "/saveTarget",
+        	data:{
+              to_save : msg,
+							csrfmiddlewaretoken: '{{ csrf_token }}'
+        	},
+        	success: function( data )
+        	{
+						if (data['final_save'] == "Yes"){
+							isSave = true;
+            	$('#saveButton').html("Saved");
+						}
+
+						else{
+							isSave = false;
+							$('#saveButton').html("Save");
+						}
+					}
+     });
+		});
+	</script>
+	{{% endif %}}
 
 {% endif %}
 

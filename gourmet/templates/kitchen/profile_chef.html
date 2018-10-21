@@ -39,25 +39,27 @@
 {% endif %}
 
 
-    <div class="row">
-			{% for rec_name, rec_hr, rec_min, rec_url, rec_img in recs %}
-      <div class="col-xs-12 col-md-4 col-sm-6">
-        <div class="card">
-          <div class="image" onclick="location.href='{{rec_url}}'"><img src="{{MEDIA_URL}}{{rec_img}}" width=100% height="auto" class="image2 img-rounded"></div>
-          <div class="description">
-            <div>
-              <h5 class="sub">Recipe Name</h5>
-              <h4>{{ rec_name }}</h4>
-            </div>
-            <div class="timeDiv">
-              <h5 class="sub">Time</h5>
-              <h4>{{rec_hr}}h {{rec_min}}m</h4>
-            </div>
-          </div>
-      </div>
-    </div>
-		{% endfor %}
-  </div>
+<div class="row">
+{% for rec_name, rec_desc, rec_hr, rec_min, rec_url, rec_img in recs %}
+<div class="col-xs-12 col-md-4 col-sm-6">
+<div class="flip-card"  onclick="location.href='{{rec_url}}'">
+<div class="flip-card-inner">
+ <div class="flip-card-front">
+   <img src="{{MEDIA_URL}}{{rec_img}}" style="width:330px;height:280px;">
+ </div>
+ <div class="flip-card-back container">
+   <h1 class="rectitle">{{ rec_name }}</h1><br><br>
+   <p class="recdes">{{ rec_desc }}</p>
+   <ul class="media">
+ <li><span class="icon icon-clock"></span><span>{{rec_hr}}hr {{rec_min}}min</span></li>
+ <li><span class="icon icon-level"></span><span> Medium</span></li>
+ </ul>
+ </div>
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
 
 
 {% if is_self %}
@@ -151,6 +153,7 @@
 
 {% endif %}
 
+
 <script type="text/javascript">
   $("#userName").val("{{user_name}}");
   $("#userAge").val({{user_age}});
@@ -182,4 +185,7 @@
   });
 
 </script>
+
+
+
 {% endblock %}

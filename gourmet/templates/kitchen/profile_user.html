@@ -37,24 +37,27 @@
 <button type="button" class="btn" id="searchButton" data-toggle="modal" data-target="#mod2" >Search Recipe</button>
 
 <div class="row">
-  {% for rec_name, rec_hr, rec_min, rec_url, rec_img in recs %}
-  <div class="col-xs-12 col-md-4 col-sm-6">
-    <div class="card">
-      <div class="image" onclick="location.href='{{rec_url}}'"><img src="{{MEDIA_URL}}{{rec_img}}" width=100% height="auto" class="image2 img-rounded"></div>
-      <div class="description">
-        <div>
-          <h5 class="sub">Recipe Name</h5>
-          <h4>{{ rec_name }}</h4>
-        </div>
-        <div class="timeDiv">
-          <h5 class="sub">Time</h5>
-          <h4>{{rec_hr}}h {{rec_min}}m</h4>
-        </div>
-      </div>
-  </div>
+{% for rec_name, rec_desc, rec_hr, rec_min, rec_url, rec_img in recs %}
+<div class="col-xs-12 col-md-4 col-sm-6">
+<div class="flip-card"  onclick="location.href='{{rec_url}}'">
+<div class="flip-card-inner">
+ <div class="flip-card-front">
+   <img src="{{MEDIA_URL}}{{rec_img}}" style="width:330px;height:280px;">
+ </div>
+ <div class="flip-card-back container">
+   <h1 class="rectitle">{{ rec_name }}</h1><br><br>
+   <p class="recdes">{{ rec_desc }}</p>
+   <ul class="media">
+ <li><span class="icon icon-clock"></span><span>{{rec_hr}}hr {{rec_min}}min</span></li>
+ <li><span class="icon icon-level"></span><span> Medium</span></li>
+ </ul>
+ </div>
+</div>
+</div>
 </div>
 {% endfor %}
 </div>
+
 
 {% if is_self %}
 <!-- Edit Modal -->
@@ -151,86 +154,24 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-body">
-        <form>
+        <form class="form-horizontal"  method="post" action="/search">
+          {% csrf_token %}
           <div class="form-group">
-            <h3>Search Recipe</h3>
-          </div>
-          <div class="form-group">
-            <label for="ingredients" class="col-sm-2">Ingredients:</label>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2">
-              <ul class="checkbox-grid">
-                <li class="checkbox">
-                  <input type="checkbox" id="ing1" name="ing1"/>
-                  <label for="ing1">Ingredient 1</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing2" name="ing2"/>
-                  <label for="ing2">Ingredient 2</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing3" name="ing3"/>
-                  <label for="ing3">Ingredient 3</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing4" name="ing4"/>
-                  <label for="ing4">Ingredient 4</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing5" name="ing5"/>
-                  <label for="ing5">Ingredient 5</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing6" name="ing6"/>
-                  <label for="ing6">Ingredient 6</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing7" name="ing7"/>
-                  <label for="ing7">Ingredient 7</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing8" name="ing8"/>
-                  <label for="ing8">Ingredient 8</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing9" name="ing9"/>
-                  <label for="ing9">Ingredient 9</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing10" name="ing10"/>
-                  <label for="ing10">Ingredient 10</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing11" name="ing11"/>
-                  <label for="ing11">Ingredient 11</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing12" name="ing12"/>
-                  <label for="ing12">Ingredient 12</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing13" name="ing13"/>
-                  <label for="ing13">Ingredient 13</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing14" name="ing14"/>
-                  <label for="ing14">Ingredient 14</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing15" name="ing15"/>
-                  <label for="ing15">Ingredient 15</label>
-                </li>
-                <li class="checkbox">
-                  <input type="checkbox" id="ing16" name="ing16"/>
-                  <label for="ing16">Ingredient 16</label>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="form-group">
-              <button type="submit" class="btn btn-success">Search</button>
-          </div>
+  					<label class="col-sm-2 control-label">Ingredients:</label><br>
+  					<div class="col-sm-offset-2">
+  						<ul class="checkbox-grid">
+  							<!-- Here -->
+  						</ul>
+  					</div>
+  				</div>
+  				<input type="hidden" id="ingAll" value="" name="ingAll">
+  				<div class="form-group">
+  					<label for="other" class="col-sm-2 control-label">New Ingredient:</label>
+  					<div class="col-sm-10">
+  						<input type="text" class="form-control time-sd" id="other">
+  					</div>
+  				</div>
+          <button class="btn btn-submit" type="submit" id="searchSubmit">Search</button>
         </form>
       </div>
     </div>
@@ -271,4 +212,53 @@
   });
 
 </script>
+
+<script type="text/javascript">
+$('.rolldown-list li').each(function () {
+var delay = ($(this).index() / 4) + 's';
+$(this).css({
+ webkitAnimationDelay: delay,
+ mozAnimationDelay: delay,
+ animationDelay: delay
+});
+});
+</script>
+
+
+<script type="text/javascript">
+var others="";
+  $('#other').keypress(function (e) {
+      var key = e.which;
+    if(key == 13)  // the enter key code
+    {
+      e.preventDefault();
+      var toadd = $('#other').val();
+      if(toadd==""){}
+      else{
+      var pt1 = '<li class="checkbox"><input type="checkbox" class="newOnes" id="'
+      var pt2='"/><label for="ing13">'
+      var pt3 = '</label></li>'
+      $('.checkbox-grid').append(pt1+toadd+pt2+toadd+pt3);
+      $('#other').val('');
+      var newId="#"+toadd;
+      $(newId).prop("checked",true);
+    }
+    }
+
+});
+
+$('#searchSubmit').click(function(e){
+var allNew = $('.newOnes');
+var finalIng = "";
+for(i=0;i<allNew.length;i++){
+  if(allNew[i].checked == true){
+    console.log(allNew[i].id);
+    finalIng+="/element/"+allNew[i].id;
+  }
+}
+console.log(finalIng);
+$('#ingAll').attr('value',finalIng);
+});
+</script>
+
 {% endblock %}

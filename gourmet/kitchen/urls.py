@@ -15,4 +15,6 @@ urlpatterns = [
     path('new',views.newRecipe, name="newRecipe"),
     path('acceptNewRec',views.acceptNewRec, name="acceptNewRec"),
     path('acceptEditRec',views.acceptEditRec, name="acceptEditRec"),
+    path('search', views.search, name="search"),
+    path('saveTarget', views.saveTarget, name="saveTarget")
 ]

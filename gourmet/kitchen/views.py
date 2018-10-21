@@ -4,6 +4,7 @@ from .models import Everyone,Recipe,Ingredient,Rating
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+import difflib
 import os
 MEDIA_URL = '/media/'
 
@@ -38,14 +39,15 @@ def loginview(request):
 
 
 def findAllAboutRecs(rec_objs):
-    rec_names, rec_hrs, rec_mins, rec_urls, rec_imgs = list(),list(),list(),list(), list()
+    rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs = list(),list(),list(),list(), list(), list()
     for i in rec_objs:
         rec_names.append(i.name)
         rec_hrs.append(i.time_hr)
         rec_mins.append(i.time_min)
         rec_urls.append(f"/recipe/{i.rec_id}")
         rec_imgs.append(i.rec_img)
-    return (rec_names, rec_hrs, rec_mins, rec_urls, rec_imgs)
+        rec_desc.append(i.desc)
+    return (rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs)
 
 
 @login_required(login_url='/login')
@@ -78,8 +80,8 @@ def profile(request, usernameLink):
     if person.type == 'C':
         if Recipe.objects.filter(chef=person).exists():
             rec_objs = Recipe.objects.filter(chef=person)
-            rec_names, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
-            context['recs']=zip(rec_names, rec_hrs, rec_mins, rec_urls, rec_imgs)
+            rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
+            context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs)
             context['recNo'] = len(rec_names)
         else:
             context['recNo'] = 0
@@ -91,8 +93,8 @@ def profile(request, usernameLink):
             rats =  Rating.objects.filter(user=person,sav=True)
             for i in rats:
                 rec_objs.append(i.rec)
-            rec_names, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
-            context['recs']=zip(rec_names, rec_hrs, rec_mins, rec_urls, rec_imgs)
+            rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
+            context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs)
             context['recNo'] = len(rec_names)
         else:
             context['recNo'] = 0
@@ -315,3 +317,45 @@ def recipe(request, recNoLink):
             return render(request, 'kitchen/disp_recipe.html', {'no_exist':True})
     else:
         return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"You must first Login","redirect_here":f"recipe/{recNoLink}"})
+
+
+
+def searching(searchIngs):
+    allRecObjs =  Recipe.objects.filter()
+    allRecAndIng = list()
+    for i in allRecObjs:
+        ings=list()
+        ings_obs = Ingredient.objects.filter(rec=i)
+        for j in ings_obs:
+            ings.append(j.name)
+        allRecAndIng.append((i,ings))
+    recAndRank=list()
+    for i in allRecAndIng:
+        a=0
+        for j in searchIngs:
+            a = a + len(difflib.get_close_matches(j,i[1]))
+        rank = a/len(i[1])
+        rank = 100*(rank/len(searchIngs))
+        if rank>0:
+            recAndRank.append((i[0],rank))
+    return recAndRank
+
+
+
+
+@login_required(login_url='/login')
+def search(request):
+    if request.method == 'POST':
+        searchIngs = request.POST.get('ingAll').split('/element/')[1:]
+        search_results = searching(searchIngs)
+        search_results.sort(key = lambda t : t[1])[0:12]
+        rec_objs=list()
+        for i in search_results:
+            rec_objs.append(i[0])
+        rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
+        context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs)
+        context['recNo'] = len(rec_names)
+        return HttpResponse("Check terminal")
+
+def saveTarget(request):
+    pass
