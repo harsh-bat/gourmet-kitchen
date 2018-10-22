@@ -1,8 +1,9 @@
 from django.shortcuts import render
+import json
 from django.contrib.auth.models import User
 from .models import Everyone,Recipe,Ingredient,Rating
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 import difflib
 import os
@@ -348,7 +349,9 @@ def search(request):
     if request.method == 'POST':
         searchIngs = request.POST.get('ingAll').split('/element/')[1:]
         search_results = searching(searchIngs)
-        search_results.sort(key = lambda t : t[1])[0:12]
+        search_results.sort(key = lambda t : t[1], reverse=True)
+        if len(search_results>12):
+            search_results=search_results[0:12]
         rec_objs=list()
         for i in search_results:
             rec_objs.append(i[0])
@@ -358,4 +361,9 @@ def search(request):
         return HttpResponse("Check terminal")
 
 def saveTarget(request):
-    pass
+    if request.method == 'POST':
+        rec = Recipe.objects.get(rec_id=request.POST.get('recNumber'))
+        user = Everyone.objects.get(id=User.objects.get(username=request.POST.get('user')))
+        return JsonResponse(json.dumps({"A":"D"}), safe=False)
+    else:
+        return HttpResponse('Not allowed')

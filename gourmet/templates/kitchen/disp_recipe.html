@@ -158,6 +158,8 @@
         	url: "/saveTarget",
         	data:{
               to_save : msg,
+							user: "{{ user.username}}",
+							recNumber : "{{rec_no}}",
 							csrfmiddlewaretoken: '{{ csrf_token }}'
         	},
         	success: function( data )
@@ -175,7 +177,7 @@
      });
 		});
 	</script>
-	{{% endif %}}
+	{% endif %}
 
 {% endif %}
 
