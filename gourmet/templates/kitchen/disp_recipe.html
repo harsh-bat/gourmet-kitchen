@@ -38,16 +38,15 @@
 						<li><i id="cl" class="fa fa-clock-o"></i> {{ rec_time_hr }}hr {{ rec_time_min }}mins</li>
 						<li><i id="lf" class="fa fa-leaf"></i> {{ rec_cal }} Calories</li>
 						{% if allow_rating %}
-						<li><a>
-							<span>Rating: </span>
+						<li>
+							<span>Your Rating: </span>
 							<strong>
-								<span class="fa fa-star star1"></span>
-								<span class="fa fa-star star2"></span>
-								<span class="fa fa-star star3"></span>
-								<span class="fa fa-star star4"></span>
-								<span class="fa fa-star star5"></span>
+								<span class="fa fa-star" id="star1"></span>
+								<span class="fa fa-star" id="star2"></span>
+								<span class="fa fa-star" id="star3"></span>
+								<span class="fa fa-star" id="star4"></span>
+								<span class="fa fa-star" id="star5"></span>
 							</strong>
-						</a>
 					</li>
 					{% endif %}
 				</ul>
@@ -122,19 +121,106 @@
 
 
 	<script>
-		var rating =4;
-		switch(rating) {
-			case 5:
-			$("li a .star5").addClass('checkedStar');
-			case 4:
-			$(".star4").addClass('checkedStar');
-			case 3:
-			$(".star3").addClass('checkedStar');
-			case 2:
-			$(".star2").addClass('checkedStar');
-			case 1:
-			$(".star1").addClass('checkedStar');
+		var rating={{inital_star}};
+		function setRating(rat){
+			$("#star5").removeClass('checkedStar');
+			$("#star4").removeClass('checkedStar');
+			$("#star3").removeClass('checkedStar');
+			$("#star2").removeClass('checkedStar');
+			$("#star1").removeClass('checkedStar');
+			switch(rat) {
+				case 5:
+				$("#star5").addClass('checkedStar');
+				case 4:
+				$("#star4").addClass('checkedStar');
+				case 3:
+				$("#star3").addClass('checkedStar');
+				case 2:
+				$("#star2").addClass('checkedStar');
+				case 1:
+				$("#star1").addClass('checkedStar');
+			}
 		}
+		setRating(rating);
+		$("#star5").hover(
+  		function() {
+    		$("#star5").addClass("hoverCheckedStar");
+				$("#star4").addClass("hoverCheckedStar");
+				$("#star3").addClass("hoverCheckedStar");
+				$("#star2").addClass("hoverCheckedStar");
+				$("#star1").addClass("hoverCheckedStar");
+  		}, function() {
+				$("#star5").removeClass("hoverCheckedStar");
+				$("#star4").removeClass("hoverCheckedStar");
+				$("#star3").removeClass("hoverCheckedStar");
+				$("#star2").removeClass("hoverCheckedStar");
+				$("#star1").removeClass("hoverCheckedStar");
+  		}
+		);
+
+		$("#star4").hover(
+  		function() {
+				$("#star5").addClass("hoverUncheckedStar");
+				$("#star4").addClass("hoverCheckedStar");
+				$("#star3").addClass("hoverCheckedStar");
+				$("#star2").addClass("hoverCheckedStar");
+				$("#star1").addClass("hoverCheckedStar");
+  		}, function() {
+				$("#star5").removeClass("hoverUncheckedStar");
+				$("#star4").removeClass("hoverCheckedStar");
+				$("#star3").removeClass("hoverCheckedStar");
+				$("#star2").removeClass("hoverCheckedStar");
+				$("#star1").removeClass("hoverCheckedStar");
+  		}
+		);
+
+		$("#star3").hover(
+			function() {
+				$("#star5").addClass("hoverUncheckedStar");
+				$("#star4").addClass("hoverUncheckedStar");
+				$("#star3").addClass("hoverCheckedStar");
+				$("#star2").addClass("hoverCheckedStar");
+				$("#star1").addClass("hoverCheckedStar");
+			}, function() {
+				$("#star5").removeClass("hoverUncheckedStar");
+				$("#star4").removeClass("hoverUncheckedStar");
+				$("#star3").removeClass("hoverCheckedStar");
+				$("#star2").removeClass("hoverCheckedStar");
+				$("#star1").removeClass("hoverCheckedStar");
+			}
+		);
+
+		$("#star2").hover(
+			function() {
+				$("#star5").addClass("hoverUncheckedStar");
+				$("#star4").addClass("hoverUncheckedStar");
+				$("#star3").addClass("hoverUncheckedStar");
+				$("#star2").addClass("hoverCheckedStar");
+				$("#star1").addClass("hoverCheckedStar");
+			}, function() {
+				$("#star5").removeClass("hoverUncheckedStar");
+				$("#star4").removeClass("hoverUncheckedStar");
+				$("#star3").removeClass("hoverUncheckedStar");
+				$("#star2").removeClass("hoverCheckedStar");
+				$("#star1").removeClass("hoverCheckedStar");
+			}
+		);
+
+		$("#star1").hover(
+			function() {
+				$("#star5").addClass("hoverUncheckedStar");
+				$("#star4").addClass("hoverUncheckedStar");
+				$("#star3").addClass("hoverUncheckedStar");
+				$("#star2").addClass("hoverUncheckedStar");
+				$("#star1").addClass("hoverCheckedStar");
+			}, function() {
+				$("#star5").removeClass("hoverUncheckedStar");
+				$("#star4").removeClass("hoverUncheckedStar");
+				$("#star3").removeClass("hoverUncheckedStar");
+				$("#star2").removeClass("hoverUncheckedStar");
+				$("#star1").removeClass("hoverCheckedStar");
+			}
+		);
 	</script>
 
 	{% if allow_rating %}
@@ -164,6 +250,8 @@
         	},
         	success: function( data )
         	{
+						data = JSON.parse(data)
+						console.log(data)
 						if (data['final_save'] == "Yes"){
 							isSave = true;
             	$('#saveButton').html("Saved");
@@ -179,6 +267,41 @@
 	</script>
 	{% endif %}
 
+ <!-- for setting rating -->
+	{% if allow_rating %}
+	<script type="text/javascript">
+	$("#star5").click(function(){setServerRating(5)});
+	$('#star4').click(function(){setServerRating(4)});
+	$('#star3').click(function(){setServerRating(3)});
+	$('#star2').click(function(){setServerRating(2)});
+	$('#star1').click(function(){setServerRating(1)});
+	function setServerRating(to_set){
+		console.log(to_set)
+		$.ajax(
+			{
+				type:"POST",
+				url: "/starTarget",
+				data:{
+						to_save : to_set,
+						user: "{{ user.username}}",
+						recNumber : "{{rec_no}}",
+						csrfmiddlewaretoken: '{{ csrf_token }}'
+				},
+				success: function(data)
+				{
+					data = JSON.parse(data);
+					console.log(data['final_rating']);
+					rating = parseInt(data['final_rating']);
+					setRating(rating);
+				}
+	 });
+
+	}
+
+	</script>
+	{% endif %}
+
+
 {% endif %}
 
- {% endblock %}
+{% endblock %}

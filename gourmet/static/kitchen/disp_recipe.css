@@ -197,14 +197,25 @@ ul.tabs li.active {
 	font-size: 1em;
 }
 
+strong .fa-star{
+		color: black;
+}
 
 .media li a:hover {
 	text-decoration: none;
 }
 
 .checkedStar {
-	color: orange;
+	color: orange !important ;
 }
+.hoverCheckedStar {
+	color: red !important ;
+}
+
+.hoverUncheckedStar {
+	color: black !important ;
+}
+
 
 .btn-edit {
 	float: right;

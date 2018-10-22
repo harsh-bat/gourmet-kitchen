@@ -18,44 +18,43 @@
   </section>
   <section class="container text-center">
     <h2>Top Rated Recipes</h2><br>
+
+    <!-- recipe cards here -->
     <div class="row">
-      <div class="col-sm-4">
-        <p></p>
-        <img src="https://images.pexels.com/photos/5928/salad-healthy-diet-spinach.jpg?h=350&auto=compress&cs=tinysrgb">
-      </div>
-      <div class="col-sm-4">
-        <p></p>
-        <img src="https://images.pexels.com/photos/566566/pexels-photo-566566.jpeg?h=350&auto=compress&cs=tinysrgb">
-      </div>
-      <div class="col-sm-4">
-        <p></p>
-        <img src="https://images.pexels.com/photos/5928/salad-healthy-diet-spinach.jpg?h=350&auto=compress&cs=tinysrgb">
-      </div>
-      <div class="col-sm-4">
-        <p></p>
-        <img src="https://images.pexels.com/photos/566566/pexels-photo-566566.jpeg?h=350&auto=compress&cs=tinysrgb">
-      </div>
-      <div class="col-sm-4">
-        <p></p>
-        <img src="https://images.pexels.com/photos/5928/salad-healthy-diet-spinach.jpg?h=350&auto=compress&cs=tinysrgb">
-      </div>
-       <div class="col-sm-4">
-        <p></p>
-        <img src="https://images.pexels.com/photos/566566/pexels-photo-566566.jpeg?h=350&auto=compress&cs=tinysrgb">
-      </div>
+    {% for rec_name, rec_desc, rec_hr, rec_min, rec_url, rec_img, rec_cal in recs %}
+    <div class="col-xs-12 col-md-4 col-sm-6">
+    <div class="flip-card"  onclick="location.href='{{rec_url}}'">
+    <div class="flip-card-inner">
+     <div class="flip-card-front">
+       <img src="{{MEDIA_URL}}{{rec_img}}" style="width:330px;height:280px;">
+     </div>
+     <div class="flip-card-back container">
+       <h1 class="rectitle">{{ rec_name }}</h1><br><br>
+       <p class="recdes">{{ rec_desc }}</p>
+       <ul class="media">
+     <li><span class="icon icon-clock"></span><span>{{rec_hr}}hr {{rec_min}}min</span></li>
+     <li><span class="icon icon-level"></span><span> Medium</span></li>
+     </ul>
+     </div>
+    </div>
+    </div>
+    </div>
+    {% endfor %}
+    </div>
+       
         <div class="row text-center">
       <a class="btn btn-secondary" href="#" data-toggle="modal" data-target="#exampleModalCenterCatalogue">View Complete Catalogue</a>
-    </div>
+      </div>
   </section>
   <div class="modal fade" id="exampleModalCenterCatalogue" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   	   <div>
   			<ul class="rolldown-list" id="myList">
-    				<li><a href="category/indian">Indian</a></li>
-    				<li><a href="category/italian">Italian</a></li>
-    				<li><a href="category/chinese">Chinese</a></li>
-    				<li><a href="category/thai">Thai</a></li>
-    				<li><a href="category/mexican">Mexican</a></li>
-    				<li><a href="category/other">Other</a></li>
+    				<li><a href="category/Indian">Indian</a></li>
+    				<li><a href="category/Italian">Italian</a></li>
+    				<li><a href="category/Chinese">Chinese</a></li>
+    				<li><a href="category/Thai">Thai</a></li>
+    				<li><a href="category/Mexican">Mexican</a></li>
+    				<li><a href="category/Other">Other</a></li>
   			</ul>
   		</div>
       </div>

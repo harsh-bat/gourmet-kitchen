@@ -40,7 +40,7 @@
 
 
 <div class="row">
-{% for rec_name, rec_desc, rec_hr, rec_min, rec_url, rec_img in recs %}
+{% for rec_name, rec_desc, rec_hr, rec_min, rec_url, rec_img, rec_cal in recs %}
 <div class="col-xs-12 col-md-4 col-sm-6">
 <div class="flip-card"  onclick="location.href='{{rec_url}}'">
 <div class="flip-card-inner">
@@ -53,6 +53,7 @@
    <ul class="media">
  <li><span class="icon icon-clock"></span><span>{{rec_hr}}hr {{rec_min}}min</span></li>
  <li><span class="icon icon-level"></span><span> Medium</span></li>
+ <li><span class="icon icon-calories"></span><span>{{ rec_cal }}</span></li>
  </ul>
  </div>
 </div>
@@ -60,6 +61,7 @@
 </div>
 {% endfor %}
 </div>
+
 
 
 {% if is_self %}

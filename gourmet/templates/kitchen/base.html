@@ -20,7 +20,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">The Gourmet Kitchen</a>
+        <a class="navbar-brand" href="/">The Gourmet Kitchen</a>
       </div>
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -33,6 +33,7 @@
         </ul>
 				<ul class="nav navbar-nav navbar-right">
 					{% if user.is_authenticated %}
+						<li><a href="/profile/user.username">Profile</a></li>
 					<li><a href="/logout">Logout</a></li>
 					{% else %}
 					<li><a href="#" data-toggle="modal" data-target="#exampleModalCenterLogin" class="loggBut">Login</a></li>

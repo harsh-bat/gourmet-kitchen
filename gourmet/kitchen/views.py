@@ -9,8 +9,40 @@ import difflib
 import os
 MEDIA_URL = '/media/'
 
-def index(request):
-    return render(request, "kitchen/index.html")
+
+def findTopRated():
+    allRecObjs =  Recipe.objects.filter()
+    recAndRating = list()
+    for i in allRecObjs:
+        avg_rat = 2
+        if Rating.objects.filter(rec=i).exists():
+            rat_objs = Rating.objects.filter(rec=i)
+            tot = 0
+            for j in rat_objs:
+                tot = tot + j.val
+            avg_rat = tot / len(rat_objs)
+        recAndRating.append(i, avg_rat)
+    recAndRating.sort(key= lambda t : t[1], reverse=True)
+    if len(recAndRating) > 6:
+        recAndRating = recAndRating[0:6]
+    try:
+        top_rated = list(zip(*recAndRating))[0]
+    except:
+        top_rated=list()
+    return top_rated
+
+
+def index(request, temp_context = None):
+    rec_objs = findTopRated()
+    if temp_context is not None:
+        context = temp_context
+    else:
+        context = dict()
+    rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals = findAllAboutRecs(rec_objs)
+    context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals)
+    context['recNo'] = len(rec_names)
+    print(context)
+    return render(request, "kitchen/index.html", context)
 
 def loginview(request):
     redirection = request.POST.get('redirect_url_login')
@@ -22,7 +54,8 @@ def loginview(request):
         elif  User.objects.filter(email=entered_email).exists():
             entered_email = User.objects.get(email=entered_email).username
         else:
-            return render(request, "kitchen/index.html",{"clickSignup":True,"error_message_signup":"You don't have an account. You must sign up","redirect_here":redirection})
+            temp_context =  {"clickSignup":True,"error_message_signup":"You don't have an account. You must sign up","redirect_here":redirection}
+            return index(request,temp_context= temp_context)
         user = authenticate(username=entered_email, password=entered_password)
         if user is not None:
             login(request, user)
@@ -32,15 +65,17 @@ def loginview(request):
             else:
                 return HttpResponseRedirect(redirection)
         else:
-            return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"Enter valid credentials","redirect_here":redirection})
+            temp_context =  {"clickLogin":True,"error_message_login":"Enter valid credentials","redirect_here":redirection}
+            return index(request,temp_context= temp_context)
     else:
         if redirection is None or redirection == "":
             redirection='/profile/fsegsegsgsgsrgrgsgsrbrs'
-        return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"You must first Login","redirect_here":redirection})
+        temp_context ={"clickLogin":True,"error_message_login":"You must first Login","redirect_here":redirection}
+        return index(request,temp_context= temp_context)
 
 
 def findAllAboutRecs(rec_objs):
-    rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs = list(),list(),list(),list(), list(), list()
+    rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals = list(),list(),list(),list(), list(), list(), list()
     for i in rec_objs:
         rec_names.append(i.name)
         rec_hrs.append(i.time_hr)
@@ -48,7 +83,8 @@ def findAllAboutRecs(rec_objs):
         rec_urls.append(f"/recipe/{i.rec_id}")
         rec_imgs.append(i.rec_img)
         rec_desc.append(i.desc)
-    return (rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs)
+        rec_cals.append(i.cal)
+    return (rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals)
 
 
 @login_required(login_url='/login')
@@ -81,8 +117,8 @@ def profile(request, usernameLink):
     if person.type == 'C':
         if Recipe.objects.filter(chef=person).exists():
             rec_objs = Recipe.objects.filter(chef=person)
-            rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
-            context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs)
+            rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals = findAllAboutRecs(rec_objs)
+            context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals)
             context['recNo'] = len(rec_names)
         else:
             context['recNo'] = 0
@@ -94,8 +130,8 @@ def profile(request, usernameLink):
             rats =  Rating.objects.filter(user=person,sav=True)
             for i in rats:
                 rec_objs.append(i.rec)
-            rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
-            context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs)
+            rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals = findAllAboutRecs(rec_objs)
+            context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals)
             context['recNo'] = len(rec_names)
         else:
             context['recNo'] = 0
@@ -110,10 +146,12 @@ def signup(request):
         entered_username = request.POST.get("signup_username")
         entered_password = request.POST.get("signup_password")
         if User.objects.filter(email=entered_email).exists():
-            return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"You already have an account. Try logging in.","redirect_here":redirection})
+            temp_context = {"clickLogin":True,"error_message_login":"You already have an account. Try logging in.","redirect_here":redirection}
+            return index(request,temp_context= temp_context)
         else:
             if User.objects.filter(username=entered_username).exists():
-                return render(request, "kitchen/index.html",{"clickSignup":True,"error_message_signup":"Username exists. Enter another one.","redirect_here":redirection})
+                temp_context = {"clickSignup":True,"error_message_signup":"Username exists. Enter another one.","redirect_here":redirection}
+                return index(request,temp_context= temp_context)
             else:
                 user = User.objects.create_user(
                     username = entered_username,
@@ -131,8 +169,8 @@ def signup(request):
                 login(request, user)
                 return HttpResponseRedirect(f"/profile/{entered_username}")
     else:
-        return render(request, "kitchen/index.html",{"clickSignup":True})
-
+        temp_context = {"clickSignup":True}
+        return index(request,temp_context= temp_context)
 
 
 
@@ -291,6 +329,11 @@ def recipe(request, recNoLink):
             current_person = Everyone.objects.get(id=request.user)
             rec = Recipe.objects.get(rec_id=recNoLink)
             ings_obs = Ingredient.objects.filter(rec=rec)
+            is_saved = False
+            inital_star = 0
+            if Rating.objects.filter(rec=rec, user=current_person).exists():
+                is_saved = Rating.objects.get(rec=rec, user=current_person).sav
+                inital_star =  Rating.objects.get(rec=rec, user=current_person).val
             ings=list()
             for i in ings_obs:
                 ings.append(i.name)
@@ -308,6 +351,8 @@ def recipe(request, recNoLink):
             "rec_no":recNoLink,
             "chef_name":rec.chef.name,
             "chef_url":f"/profile/{rec.chef.id.username}",
+            "is_saved" : is_saved,
+            "inital_star" : inital_star,
             }
             if rec.chef == current_person :
                 context['allow_edit']=True
@@ -317,7 +362,8 @@ def recipe(request, recNoLink):
         else:
             return render(request, 'kitchen/disp_recipe.html', {'no_exist':True})
     else:
-        return render(request, "kitchen/index.html",{"clickLogin":True,"error_message_login":"You must first Login","redirect_here":f"recipe/{recNoLink}"})
+        temp_context = {"clickLogin":True,"error_message_login":"You must first Login","redirect_here":f"recipe/{recNoLink}"}
+        return index(request,temp_context= temp_context)
 
 
 
@@ -342,8 +388,6 @@ def searching(searchIngs):
     return recAndRank
 
 
-
-
 @login_required(login_url='/login')
 def search(request):
     if request.method == 'POST':
@@ -364,6 +408,53 @@ def saveTarget(request):
     if request.method == 'POST':
         rec = Recipe.objects.get(rec_id=request.POST.get('recNumber'))
         user = Everyone.objects.get(id=User.objects.get(username=request.POST.get('user')))
-        return JsonResponse(json.dumps({"A":"D"}), safe=False)
+        to_do = request.POST.get('to_save')
+        rat_obj = None
+        if Rating.objects.filter(rec=rec, user=user).exists():
+            rat_obj = Rating.objects.get(rec=rec, user=user)
+        else:
+            rat_obj = Ratings.objects.create(rec=rec,user=user)
+            rat_obj.save()
+        to_send=dict()
+        if to_do == 'add':
+            rat_obj.sav=True
+            rat_obj.save()
+            to_send['final_save']="Yes"
+        elif to_do == 'remove':
+            rat_obj.sav=False
+            rat_obj.save()
+            to_send['final_save']="No"
+        return JsonResponse(json.dumps(to_send), safe=False)
     else:
         return HttpResponse('Not allowed')
+
+def starTarget(request):
+    if request.method == 'POST':
+        rec = Recipe.objects.get(rec_id=request.POST.get('recNumber'))
+        user = Everyone.objects.get(id=User.objects.get(username=request.POST.get('user')))
+        new_rating = int(request.POST.get('to_save'))
+        rat_obj = None
+        to_send=dict()
+        if Rating.objects.filter(rec=rec, user=user).exists():
+            rat_obj = Rating.objects.get(rec=rec, user=user)
+        else:
+            rat_obj = Ratings.objects.create(rec=rec,user=user)
+            rat_obj.save()
+        rat_obj.val=new_rating
+        rat_obj.save()
+        to_send['final_rating']=str(new_rating)
+        return JsonResponse(json.dumps(to_send), safe=False)
+    else:
+        return HttpResponse('Not allowed')
+
+def category(request, urlCategory):
+    allCats = ['Indian', 'Chinese', 'Italian', 'Mexican', 'Thai', 'Other']
+    if urlCategory in allCats:
+        rec_objs = Recipe.objects.filter(category=urlCategory)
+        rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
+        context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs)
+        context['recNo'] = len(rec_names)
+        context['category'] = urlCategory
+        return render(request, 'kitchen/category.html', context)
+    else:
+        return HttpResponse("Not a valid category")

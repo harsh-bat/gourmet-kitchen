@@ -16,5 +16,7 @@ urlpatterns = [
     path('acceptNewRec',views.acceptNewRec, name="acceptNewRec"),
     path('acceptEditRec',views.acceptEditRec, name="acceptEditRec"),
     path('search', views.search, name="search"),
-    path('saveTarget', views.saveTarget, name="saveTarget")
+    path('category/<str:urlCategory>', views.category, name="category"),
+    path('saveTarget', views.saveTarget, name="saveTarget"),
+    path('starTarget', views.starTarget, name="starTarget"),
 ]
