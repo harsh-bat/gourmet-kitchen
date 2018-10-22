@@ -21,7 +21,7 @@ def findTopRated():
             for j in rat_objs:
                 tot = tot + j.val
             avg_rat = tot / len(rat_objs)
-        recAndRating.append(i, avg_rat)
+        recAndRating.append((i, avg_rat))
     recAndRating.sort(key= lambda t : t[1], reverse=True)
     if len(recAndRating) > 6:
         recAndRating = recAndRating[0:6]
@@ -41,6 +41,7 @@ def index(request, temp_context = None):
     rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals = findAllAboutRecs(rec_objs)
     context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals)
     context['recNo'] = len(rec_names)
+    context['MEDIA_URL'] = MEDIA_URL
     print(context)
     return render(request, "kitchen/index.html", context)
 
@@ -413,7 +414,7 @@ def saveTarget(request):
         if Rating.objects.filter(rec=rec, user=user).exists():
             rat_obj = Rating.objects.get(rec=rec, user=user)
         else:
-            rat_obj = Ratings.objects.create(rec=rec,user=user)
+            rat_obj = Rating.objects.create(rec=rec,user=user)
             rat_obj.save()
         to_send=dict()
         if to_do == 'add':
@@ -438,7 +439,7 @@ def starTarget(request):
         if Rating.objects.filter(rec=rec, user=user).exists():
             rat_obj = Rating.objects.get(rec=rec, user=user)
         else:
-            rat_obj = Ratings.objects.create(rec=rec,user=user)
+            rat_obj = Rating.objects.create(rec=rec,user=user)
             rat_obj.save()
         rat_obj.val=new_rating
         rat_obj.save()
