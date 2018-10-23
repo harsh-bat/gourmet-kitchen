@@ -407,6 +407,7 @@ def search(request):
         rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals = findAllAboutRecs(rec_objs)
         context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals)
         context['recNo'] = len(rec_names)
+        context["MEDIA_URL"] = MEDIA_URL
         return render(request, 'kitchen/result.html', context)
 
 def saveTarget(request):
@@ -460,6 +461,7 @@ def category(request, urlCategory):
         context=dict()
         context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals)
         context['recNo'] = len(rec_names)
+        context["MEDIA_URL"] = MEDIA_URL
         context['category'] = urlCategory+ " Cuisine"
         return render(request, 'kitchen/category.html', context)
     else:
