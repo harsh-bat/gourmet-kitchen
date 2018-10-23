@@ -1,0 +1,176 @@
+{% extends 'kitchen/base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row mainCard center-block">
+		<div class="col-sm-12">
+			<h1>Add Recipe</h1>
+			<form class="form-horizontal"  method="post" action="/acceptNewRec" enctype='multipart/form-data'>
+				{% csrf_token %}
+				<div class="form-group">
+					<label for="recName" class="col-sm-2 control-label">Name of Recipe:</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="recName" placeholder="Name of Recipe" required name="recName">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="recDesc" class="col-sm-2 control-label">Description:</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="recDesc" placeholder="Short Description" required name="recDesc">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="recCal" class="col-sm-2 control-label">Calories:</label>
+					<div class="col-sm-10">
+						<input type="number" class="form-control time-sd" id="recCal" placeholder="Calories" required name="recCal">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="recDir" class="col-sm-2 control-label">Directions:</label>
+					<div class="col-sm-10">
+						<textarea class="form-control" id="recDir" rows="7" cols="30" placeholder="Directions" required name="recDir"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Ingredients:</label>
+					<div class="col-sm-offset-2">
+						<ul class="checkbox-grid">
+							<li class="checkbox">
+								<input type="checkbox" name="ing1"/>
+								<label for="ing1">Bread</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing2"/>
+								<label for="ing2">Broccoli</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing3"/>
+								<label for="ing3">Butter</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing4"/>
+								<label for="ing4">Cheese</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing5"/>
+								<label for="ing5">Cooking Oil</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing6"/>
+								<label for="ing6">Eggs</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing7"/>
+								<label for="ing7">Fresh Herbs</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing8"/>
+								<label for="ing8">Meat / Fish</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing9"/>
+								<label for="ing9">Milk</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing10"/>
+								<label for="ing10">Onions</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing11"/>
+								<label for="ing11">Oranges</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing12"/>
+								<label for="ing12">Pears</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing13"/>
+								<label for="ing13">Salt & Spices</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing14"/>
+								<label for="ing14">Sugar</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing15"/>
+								<label for="ing15">Sweet Potatoes</label>
+							</li>
+							<li class="checkbox">
+								<input type="checkbox" name="ing16"/>
+								<label for="ing16">Other</label>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="other" class="col-sm-2 control-label">Other:</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control time-sd" id="other">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="time" class="col-sm-2 control-label">Time Required:</label>
+					<div class="col-sm-10">
+						<input type="number" min="0" max="100" default="0" class="form-control time-sd" id="hrs" required name="recHr"><span class="time-sd time-txt">hrs</span>
+						<input type="number" min="0" max="59" class="form-control time-sd" id="mins" required name="recMin"><span class="time-sd time-txt">mins</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="imgUpload" class="col-sm-2 control-label">Image:</label>
+					<div class="col-sm-10">
+						<div>
+							<img src="#" class="thumbnail" id="currentImg">
+						</div>
+						<input type="file" class="form-control" id="imgUpload" accept="image/*" required name="imgUpload">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-success">Submit</button>
+					</div>
+				</div>
+			</form>
+
+		</div>
+	</div>
+<link rel="stylesheet" href="{% static "kitchen/new_rec.css" %}">
+	<script type="text/javascript">
+		$(".time-sd")[0].defaultValue = 0;
+		$(".time-sd")[2].defaultValue = 0;
+		$("#currentImg").hide();
+		$("#imgUpload").change(function(e) {
+
+			for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+				var file = e.originalEvent.srcElement.files[i];
+				var reader = new FileReader();
+				reader.onloadend = function() {
+					$("#currentImg").attr("src",reader.result);
+				}
+				$("#currentImg").show();
+				reader.readAsDataURL(file);
+			}
+		});
+	</script>
+
+	<script type="text/javascript">
+	var others="";
+		$('#other').keypress(function (e) {
+				var key = e.which;
+ 			if(key == 13)  // the enter key code
+  		{
+				e.preventDefault();
+				var toadd = $('#other').val();
+				if(toadd==""){}
+				else{
+				var pt1 = '<li class="checkbox"><input type="checkbox" id="'
+				var pt2='"/><label for="ing13">'
+				var pt3 = '</label></li>'
+				$('.checkbox-grid').append(pt1+toadd+pt2+toadd+pt3);
+				$('#other').val('');
+				var newId="#"+toadd;
+				$(newId).prop("checked",true);
+			}
+  		}
+});
+	</script>
+{% endblock %}

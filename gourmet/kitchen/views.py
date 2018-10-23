@@ -10,6 +10,9 @@ import os
 MEDIA_URL = '/media/'
 
 
+def meet(request):
+    return render(request, "kitchen/team.html")
+
 def findTopRated():
     allRecObjs =  Recipe.objects.filter()
     recAndRating = list()
@@ -395,15 +398,16 @@ def search(request):
         searchIngs = request.POST.get('ingAll').split('/element/')[1:]
         search_results = searching(searchIngs)
         search_results.sort(key = lambda t : t[1], reverse=True)
-        if len(search_results>12):
+        if len(search_results)>12:
             search_results=search_results[0:12]
         rec_objs=list()
         for i in search_results:
             rec_objs.append(i[0])
-        rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
-        context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs)
+        context=dict()
+        rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals = findAllAboutRecs(rec_objs)
+        context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals)
         context['recNo'] = len(rec_names)
-        return HttpResponse("Check terminal")
+        return render(request, 'kitchen/result.html', context)
 
 def saveTarget(request):
     if request.method == 'POST':
@@ -452,10 +456,11 @@ def category(request, urlCategory):
     allCats = ['Indian', 'Chinese', 'Italian', 'Mexican', 'Thai', 'Other']
     if urlCategory in allCats:
         rec_objs = Recipe.objects.filter(category=urlCategory)
-        rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs = findAllAboutRecs(rec_objs)
-        context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs)
+        rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals = findAllAboutRecs(rec_objs)
+        context=dict()
+        context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals)
         context['recNo'] = len(rec_names)
-        context['category'] = urlCategory
+        context['category'] = urlCategory+ " Cuisine"
         return render(request, 'kitchen/category.html', context)
     else:
         return HttpResponse("Not a valid category")

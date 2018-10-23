@@ -110,14 +110,14 @@ section .row img {
   animation-fill-mode: forwards;
 }
 
-.rolldown-list li:nth-child(2n) {
-  background-color: #a8a7a6;
+.rolldown-list li:nth-child(2n+1) {
+  background-color: #D66D75;
 }
 .rolldown-list li:nth-child(2n) a {
   color: black;
 }
-.rolldown-list li:nth-child(2n+1) {
-  background-color: #5b5956;
+.rolldown-list li:nth-child(2n) {
+  background-color: #e2d0d6;
 }
 .rolldown-list li:nth-child(2n+1) a {
   color: white;

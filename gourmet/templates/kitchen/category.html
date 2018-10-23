@@ -1,0 +1,51 @@
+{% extends 'kitchen/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static "kitchen/category.css" %}">
+<link href="https://fonts.googleapis.com/css?family=Satisfy" rel="stylesheet">
+<style media="screen">
+.page-header2 {
+  background: url("{% static "kitchen/common-back.jpg" %}");
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 150px;
+  font-family: 'Satisfy', cursive;
+}
+</style>
+<div class="page-header2" >
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1>{{ category }}</h1>
+                </div><!-- .col -->
+            </div><!-- .row -->
+        </div><!-- .container -->
+</div>
+
+<div class="row">
+{% for rec_name, rec_desc, rec_hr, rec_min, rec_url, rec_img, rec_cal in recs %}
+<div class="col-xs-12 col-md-4 col-sm-6">
+<div class="flip-card"  onclick="location.href='{{rec_url}}'">
+<div class="flip-card-inner">
+ <div class="flip-card-front">
+   <img src="{{MEDIA_URL}}{{rec_img}}" style="width:330px;height:280px;">
+ </div>
+ <div class="flip-card-back container">
+   <h1 class="rectitle">{{ rec_name }}</h1><br><br>
+   <p class="recdes">{{ rec_desc }}</p>
+   <ul class="media">
+ <li><span class="icon icon-clock"></span><span>{{rec_hr}}hr {{rec_min}}min</span></li>
+ <li><span class="icon icon-level"></span><span> Medium</span></li>
+ </ul>
+ </div>
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
+
+
+
+
+
+ {% endblock %}

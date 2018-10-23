@@ -1,0 +1,130 @@
+{% extends 'kitchen/base.html' %}
+{% load static %}
+{% block content %}
+
+<style media="screen">
+.page-header2 {
+  background: url("{% static "kitchen/common-back.jpg" %}");
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 150px;
+  font-family: 'Satisfy', cursive;
+}
+</style>
+
+{% if recNo == 0 %}
+<div class="page-header2" >
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+          <h1>No Results Found. Try using other ingredients.</h1>
+      </div><!-- .col -->
+    </div><!-- .row -->
+  </div><!-- .container -->
+</div>
+{% else %}
+<div class="page-header2" >
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+          <h1>Results</h1>
+      </div><!-- .col -->
+    </div><!-- .row -->
+  </div><!-- .container -->
+</div>
+{% endif %}
+<button type="button" class="btn" id="searchButton" data-toggle="modal" data-target="#mod2" >Search Recipe</button>
+<div class="row">
+{% for rec_name, rec_desc, rec_hr, rec_min, rec_url, rec_img, rec_cal in recs %}
+<div class="col-xs-12 col-md-4 col-sm-6">
+<div class="flip-card"  onclick="location.href='{{rec_url}}'">
+<div class="flip-card-inner">
+ <div class="flip-card-front">
+   <img src="{{MEDIA_URL}}{{rec_img}}" style="width:330px;height:280px;">
+ </div>
+ <div class="flip-card-back container">
+   <h1 class="rectitle">{{ rec_name }}</h1><br><br>
+   <p class="recdes">{{ rec_desc }}</p>
+   <ul class="media">
+ <li><span class="icon icon-clock"></span><span>{{rec_hr}}hr {{rec_min}}min</span></li>
+ <li><span class="icon icon-level"></span><span> Medium</span></li>
+ </ul>
+ </div>
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
+
+
+
+<!-- Modal for search -->
+<div class="modal fade" id="mod2" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form class="form-horizontal"  method="post" action="/search">
+          {% csrf_token %}
+          <div class="form-group">
+  					<label class="col-sm-2 control-label">Ingredients:</label><br>
+  					<div class="col-sm-offset-2">
+  						<ul class="checkbox-grid">
+  							<!-- Here -->
+  						</ul>
+  					</div>
+  				</div>
+  				<input type="hidden" id="ingAll" value="" name="ingAll">
+  				<div class="form-group">
+  					<label for="other" class="col-sm-2 control-label">New Ingredient:</label>
+  					<div class="col-sm-10">
+  						<input type="text" class="form-control time-sd" id="other">
+  					</div>
+  				</div>
+          <button class="btn btn-submit" type="submit" id="searchSubmit">Search</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+var others="";
+  $('#other').keypress(function (e) {
+      var key = e.which;
+    if(key == 13)  // the enter key code
+    {
+      e.preventDefault();
+      var toadd = $('#other').val();
+      if(toadd==""){}
+      else{
+      var pt1 = '<li class="checkbox"><input type="checkbox" class="newOnes" id="'
+      var pt2='"/><label for="ing13">'
+      var pt3 = '</label></li>'
+      $('.checkbox-grid').append(pt1+toadd+pt2+toadd+pt3);
+      $('#other').val('');
+      var newId="#"+toadd;
+      $(newId).prop("checked",true);
+    }
+    }
+
+});
+
+$('#searchSubmit').click(function(e){
+var allNew = $('.newOnes');
+var finalIng = "";
+for(i=0;i<allNew.length;i++){
+  if(allNew[i].checked == true){
+    console.log(allNew[i].id);
+    finalIng+="/element/"+allNew[i].id;
+  }
+}
+console.log(finalIng);
+$('#ingAll').attr('value',finalIng);
+});
+</script>
+
+
+<link rel="stylesheet" href="{% static "kitchen/result.css" %}">
+<link href="https://fonts.googleapis.com/css?family=Satisfy" rel="stylesheet">
+{% endblock %}

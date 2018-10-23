@@ -19,4 +19,5 @@ urlpatterns = [
     path('category/<str:urlCategory>', views.category, name="category"),
     path('saveTarget', views.saveTarget, name="saveTarget"),
     path('starTarget', views.starTarget, name="starTarget"),
+    path('meet', views.meet, name="meet"),
 ]
