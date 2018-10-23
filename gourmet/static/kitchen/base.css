@@ -13,14 +13,6 @@
     opacity:0.8 !important;
 }
 
-.modal-body{
-  /* background:#fff; */
-}
-
-.modal{
-  /* color:black; */
-}
-
 body{
   background: #D66D75;
   background: -webkit-linear-gradient(to right, #E29587, #D66D75);

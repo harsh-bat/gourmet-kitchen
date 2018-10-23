@@ -32,7 +32,7 @@ class Recipe(models.Model):
     rec_img = models.FileField(upload_to=user_directory_path_rec,null=True, storage=OverwriteStorage())
     chef = models.ForeignKey(Everyone, on_delete=models.CASCADE,null=True)
     def __str__(this):
-        return str(this.name)
+        return str(this.name+"-"+this.chef.name)
 
 class Ingredient(models.Model):
     name= models.CharField(max_length=100)
