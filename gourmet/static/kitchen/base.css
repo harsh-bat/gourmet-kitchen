@@ -1,3 +1,10 @@
+html, body{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 #errorMessageLogin{
   color: red;
   font-size: 1.2em;
@@ -8,13 +15,108 @@
   font-size: 1.2em;
 }
 
+
 .modal-backdrop
 {
     opacity:0.8 !important;
 }
 
 body{
-  background: #D66D75;
+  background-color: #6d3c59;
+  /* background: #D66D75;
   background: -webkit-linear-gradient(to right, #E29587, #D66D75);
-  background: linear-gradient(to right, #E29587, #D66D75);
+  background: linear-gradient(to right, #E29587, #D66D75); */
 }
+
+.cont{
+  height: auto;
+	max-height:300px;
+	width: 300px;
+	overflow: hidden;
+	background-color: #FFFFFF;
+	border-radius: 10px;
+	box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+	text-align: center;
+	-webkit-transition: .1s ease-in-out;
+	transition: .1s ease-in-out;
+	border: solid;
+	position: center;
+	margin:40px;
+	height:300px;
+}
+
+.cont:hover{
+  margin-top: -25px;
+  box-shadow: 0 15px 20px rgba(0,0,0,0.1);
+}
+
+.card_Banner{
+height: 100px;
+width: inherit;
+padding-top: 35px;
+margin-left: auto;
+margin-right: auto;rg
+background-color: #FAFAFA;
+background-size: cover;
+background-position: center;
+}
+
+.cont:nth-child(1) .card_Banner{
+  background-image: url("https://images.pexels.com/photos/990826/pexels-photo-990826.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
+}
+
+.card_Avatar{
+height: 100px;
+width: 100px;
+margin: auto auto;
+background-size: cover;
+background-position: center;
+background-color: #F1F1F1;
+border: 3px solid #FFFFFF;
+border-radius: 100%;
+box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+}
+
+.cont {
+	ul{
+	margin-top: 10px;
+	padding: 15px 0px;
+	background-color: #FAFAFA;
+}
+
+	ul a{
+		display: inline;
+		margin-right: 10px;
+	}
+*::selection{
+	background-color: #CCFF90;
+}
+
+}
+
+.cont h3, a, i{
+	font-family: 'Roboto', sans-serif;
+	font-weight: lighter;
+	-webkit-transition: .1s ease-in-out;
+	transition: .1s ease-in-out;
+}
+
+.cont	h3{
+		margin-top: 45px;
+		margin-bottom: 5px;
+		font-size: 18px;
+		color: #212121;
+	}
+
+.cont	a{
+		display: block;
+		padding: 5px 0px;
+		font-size: 14px;
+		color: #9E9E9E;
+		text-decoration: none;
+	}
+
+.cont		a:hover{
+			background-color: #FAFAFA;
+			color: inherit;
+		}

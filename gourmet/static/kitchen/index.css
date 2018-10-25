@@ -77,7 +77,11 @@ section .row img {
   color: #f44242;
   margin: 0 0 30px;
    font-weight: bold;
-
+   text-align: center;
+   width: 450px;
+   height: 40px;
+   vertical-align: middle;
+   line-height: 25px;
 }
 
 

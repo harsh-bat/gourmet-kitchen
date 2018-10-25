@@ -2,12 +2,13 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"/>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
   <title>The Gourmet Kitchen</title>
-	<link rel="stylesheet" href="{% static "kitchen/base.css" %}">
 	<link rel="stylesheet" href="{% static "bootstrap/bootstrap.min.css" %}">
 	<link rel="stylesheet" href="{% static "bootstrap/bootstrap-theme.min.css" %}">
 	<script type="text/javascript" src="{% static "bootstrap/jquery-3.3.1.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "bootstrap/bootstrap.min.js" %}"></script>
+	<link rel="stylesheet" href="{% static "kitchen/base.css" %}">
 </head>
 <body>
   <nav class="navbar navbar-default">
@@ -29,7 +30,7 @@
               <li><a href="/meet">Meet the team</a></li>
           </li>
           <li><a href="">Feedback</a></li>
-					<li><a href="" data-toggle="modal" data-target="#exampleModalCenterLogin">Contact Us</a></li>
+					<li><a href="" data-toggle="modal" data-target="#exampleModalContact">Contact Us</a></li>
         </ul>
 				<ul class="nav navbar-nav navbar-right">
 					{% if user.is_authenticated %}
@@ -121,6 +122,28 @@
 			</div>
 		</div>
 	</div> <!--  modal end -->
+	<style media="screen">
+	.chef_contact{
+		background-image: url("{% static "kitchen/chef-animate.jpg" %}");
+	}
+	</style>
+
+	<div class="modal fade" id="exampleModalContact" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+	<center>
+		<div class="cont">
+		   <div class="card_Banner">
+		      <div class="card_Avatar chef_contact"></div>
+		   </div>
+			<h3>The Gourmet Kitchen</h3>
+			<a href="mailto:thegourmetkitchen@gmail.com"><i class="far fa-envelope"></i> thegourmetkitchen@gmail.com</a>
+			<a><i class="fas fa-mobile-alt"></i> +91 2242335000/ +91 2242335001</a>
+		</div>
+	</center>
+
+	</div>
+	</div> <!--  modal end -->
+
   {% block content %}
   {% endblock %}
 	<script type="text/javascript">
