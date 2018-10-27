@@ -22,10 +22,10 @@ html, body{
 }
 
 body{
-  background-color: #6d3c59;
-  /* background: #D66D75;
+  /* background-color: #6d3c59; */
+  background: #D66D75;
   background: -webkit-linear-gradient(to right, #E29587, #D66D75);
-  background: linear-gradient(to right, #E29587, #D66D75); */
+  background: linear-gradient(to right, #E29587, #D66D75);
 }
 
 .cont{
