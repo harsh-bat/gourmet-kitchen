@@ -1,4 +1,6 @@
-
+body{
+	overflow-x: hidden;
+}
 .flip-card
 {
 	margin-top: 20px;
