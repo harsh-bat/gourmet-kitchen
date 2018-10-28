@@ -37,25 +37,26 @@
 <button type="button" class="btn" id="searchButton" data-toggle="modal" data-target="#mod2" >Search Recipe</button>
 
 <div class="row">
-{% for rec_name, rec_desc, rec_hr, rec_min, rec_url, rec_img, rec_cal in recs %}
-<div class="col-xs-12 col-md-4 col-sm-6">
-<div class="flip-card"  onclick="location.href='{{rec_url}}'">
-<div class="flip-card-inner">
- <div class="flip-card-front">
-   <img src="{{MEDIA_URL}}{{rec_img}}" style="width:330px;height:280px;">
- </div>
- <div class="flip-card-back container">
-   <h1 class="rectitle">{{ rec_name }}</h1><br><br>
-   <p class="recdes">{{ rec_desc }}</p>
-   <ul class="media">
- <li><span class="icon icon-clock"></span><span>{{rec_hr}}hr {{rec_min}}min</span></li>
- <li><span class="icon icon-level"></span><span> Medium</span></li>
- </ul>
- </div>
-</div>
-</div>
-</div>
-{% endfor %}
+  {% for rec_name, rec_desc, rec_hr, rec_min, rec_url, rec_img, rec_cal in recs %}
+  <div class="col-xs-12 col-md-4 col-sm-6">
+  <div class="flip-card"  onclick="location.href='{{rec_url}}'">
+  <div class="flip-card-inner">
+   <div class="flip-card-front">
+     <img src="{{MEDIA_URL}}{{rec_img}}" style="width:330px;height:280px;">
+   </div>
+   <div class="flip-card-back container">
+     <h1 class="rectitle">{{ rec_name }}</h1><br><br>
+     <p class="recdes">{{ rec_desc }}</p>
+     <ul class="media">
+   <li><span class="icon icon-clock"></span><span>{{rec_hr}}hr {{rec_min}}min</span></li>
+   <li><span class="icon icon-level"></span><span> Medium</span></li>
+   <li><span class="icon icon-calories"></span><span>{{ rec_cal }}</span></li>
+   </ul>
+   </div>
+  </div>
+  </div>
+  </div>
+  {% endfor %}
 </div>
 
 
@@ -229,21 +230,21 @@ $(this).css({
 var others="";
   $('#other').keypress(function (e) {
       var key = e.which;
-    if(key == 13)  // the enter key code
-    {
-      e.preventDefault();
-      var toadd = $('#other').val();
-      if(toadd==""){}
-      else{
-      var pt1 = '<li class="checkbox"><input type="checkbox" class="newOnes" id="'
-      var pt2='"/><label for="ing13">'
-      var pt3 = '</label></li>'
-      $('.checkbox-grid').append(pt1+toadd+pt2+toadd+pt3);
-      $('#other').val('');
-      var newId="#"+toadd;
-      $(newId).prop("checked",true);
-    }
-    }
+      if(key == 13)  // the enter key code
+      {
+        e.preventDefault();
+        var toadd = $('#other').val();
+        if(toadd==""){}
+        else{
+        var pt1 = '<li class="checkbox"><input type="checkbox" class="newOnes" checked id="'
+        var pt2='"/><label>'
+        var pt3 = '</label></li>'
+        $('.checkbox-grid').append(pt1+toadd.replace(/ /g,'^ghhd^')+pt2+toadd+pt3);
+        $('#other').val('');
+        var newId="#"+toadd.replace(/ /g,'^ghhd^');
+        $(newId).prop("checked",true);
+      }
+      }
 
 });
 

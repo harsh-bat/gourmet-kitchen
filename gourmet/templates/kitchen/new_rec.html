@@ -115,12 +115,12 @@
 				var toadd = $('#other').val();
 				if(toadd==""){}
 				else{
-				var pt1 = '<li class="checkbox"><input type="checkbox" class="newOnes" id="'
-				var pt2='"/><label for="ing13">'
+				var pt1 = '<li class="checkbox"><input type="checkbox" class="newOnes" checked id="'
+				var pt2='"/><label>'
 				var pt3 = '</label></li>'
-				$('.checkbox-grid').append(pt1+toadd+pt2+toadd+pt3);
+				$('.checkbox-grid').append(pt1+toadd.replace(/ /g,'^ghhd^')+pt2+toadd+pt3);
 				$('#other').val('');
-				var newId="#"+toadd;
+				var newId="#"+toadd.replace(/ /g,'^ghhd^');
 				$(newId).prop("checked",true);
 			}
   		}

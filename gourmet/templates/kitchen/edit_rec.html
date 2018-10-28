@@ -55,10 +55,10 @@
 					<div class="col-sm-offset-2">
 						<ul class="checkbox-grid">
 							<!-- Here -->
-							{% for ing in ings %}
+							{% for ing, modIng in ings %}
 							<li class="checkbox">
-								<input type="checkbox" class="newOnes" id="{{ing}}"/>
-								<label for="ing13">{{ing}}</label>
+								<input type="checkbox" class="newOnes" id="{{modIng}}" checked/>
+								<label>{{ing}}</label>
 							</li>
 							{% endfor %}
 						</ul>
@@ -116,21 +116,21 @@
 	var others="";
 		$('#other').keypress(function (e) {
 				var key = e.which;
- 			if(key == 13)  // the enter key code
-  		{
-				e.preventDefault();
-				var toadd = $('#other').val();
-				if(toadd==""){}
-				else{
-				var pt1 = '<li class="checkbox"><input type="checkbox" class="newOnes" id="'
-				var pt2='"/><label for="ing13">'
-				var pt3 = '</label></li>'
-				$('.checkbox-grid').append(pt1+toadd+pt2+toadd+pt3);
-				$('#other').val('');
-				var newId="#"+toadd;
-				$(newId).prop("checked",true);
-			}
-  		}
+				if(key == 13)  // the enter key code
+	  		{
+					e.preventDefault();
+					var toadd = $('#other').val();
+					if(toadd==""){}
+					else{
+					var pt1 = '<li class="checkbox"><input type="checkbox" class="newOnes" checked id="'
+					var pt2='"/><label>'
+					var pt3 = '</label></li>'
+					$('.checkbox-grid').append(pt1+toadd.replace(/ /g,'^ghhd^')+pt2+toadd+pt3);
+					$('#other').val('');
+					var newId="#"+toadd.replace(/ /g,'^ghhd^');
+					$(newId).prop("checked",true);
+				}
+	  		}
 
 });
 
@@ -155,9 +155,9 @@ $('#recCal').val("{{rec_cal}}");
 $('#recHr').val({{rec_time_hr}});
 $('#recMin').val({{rec_time_min}});
 $('#recCategory').val("{{rec_category}}");
-{% for ing in ings %}
-$('#{{ing}}').prop("checked",true);
-{% endfor %}
+	{% for modIng in ModIngs %}
+		$('#{{modIng}}').prop('checked',true);
+	{% endfor %}
 </script>
 
 {% endif %}

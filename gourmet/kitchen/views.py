@@ -45,7 +45,6 @@ def index(request, temp_context = None):
     context['recs']=zip(rec_names, rec_desc, rec_hrs, rec_mins, rec_urls , rec_imgs, rec_cals)
     context['recNo'] = len(rec_names)
     context['MEDIA_URL'] = MEDIA_URL
-    print(context)
     return render(request, "kitchen/index.html", context)
 
 def loginview(request):
@@ -239,7 +238,7 @@ def acceptNewRec(request):
     if request.method == 'POST':
         logged_chef = Everyone.objects.get(id=request.user)
         print(request.POST.get('recCategory'))
-        ingList = request.POST.get('ingAll').split('/element/')[1:]
+        ingList = request.POST.get('ingAll').replace("^ghhd^", " ").split('/element/')[1:]
         recipe = Recipe.objects.create(
             name = request.POST.get('recName'),
             desc =  request.POST.get('recDesc'),
@@ -267,8 +266,10 @@ def editRec(request,recNoLink):
         rec = Recipe.objects.get(rec_id=recNoLink)
         ings_obs = Ingredient.objects.filter(rec=rec)
         ings=list()
+        modIngs=list()
         for i in ings_obs:
             ings.append(i.name)
+            modIngs.append(i.name.replace(' ', '^ghhd^'))
         if logged_chef == rec.chef:
             context = {
             "rec_name" : rec.name,
@@ -279,9 +280,10 @@ def editRec(request,recNoLink):
             "rec_time_hr" : rec.time_hr,
             "rec_time_min" : rec.time_min,
             "rec_img":rec.rec_img,
-            "ings":ings,
+            "ings": zip(ings,modIngs),
             "MEDIA_URL":MEDIA_URL,
             "rec_no":recNoLink,
+            "ModIng":modIngs,
             }
             return render(request,"kitchen/edit_rec.html", context)
         else:
@@ -293,7 +295,7 @@ def editRec(request,recNoLink):
 @login_required(login_url='/login')
 def acceptEditRec(request):
     if request.method == 'POST':
-        ingList = request.POST.get('ingAll').split('/element/')[1:]
+        ingList = request.POST.get('ingAll').replace("^ghhd^", " ").split('/element/')[1:]
         current_rec = Recipe.objects.get(rec_id=request.POST.get('recNo'))
         current_rec.name = request.POST.get('recName')
         current_rec.desc =  request.POST.get('recDesc')
