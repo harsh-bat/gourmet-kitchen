@@ -77,7 +77,7 @@ h3, a, i{
 		a:hover{
 			background-color: #FAFAFA;
 			color: inherit;
-			cursor: pointer; /* ⬅ For Codepen demo - Not important! */
+			cursor: pointer;
 		}
 
 .cont {
@@ -101,7 +101,7 @@ body{
   overflow-x: hidden;
 }
 
-/* try */
+/* page header with background */
 .page-header2 {
     position: relative;
     z-index: 99;

@@ -13,9 +13,6 @@ a {
 	color: #3498db;
 }
 
-.recipe-card {
-
-}
 .recipe-card__body {
 	padding: 20px;
 	background:white;
@@ -140,7 +137,6 @@ ul.tabs li.active {
 }
 
 
-/*responsive*/
 @media (min-width:600px) {
 	.recipe-card {
 		width: 600px;

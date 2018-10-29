@@ -1,3 +1,7 @@
+body{
+  overflow-x: hidden;
+}
+
 .result {
 font-size:60px;
 font-weight:bold;
